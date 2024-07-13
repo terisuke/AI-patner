@@ -2,9 +2,10 @@ export async function googleTts(
   message: string,
   ttsType: string
 ) {
+  try {
   // Imports the Google Cloud client library
-  const textToSpeech = require('@google-cloud/text-to-speech');
-
+    const textToSpeech = require('@google-cloud/text-to-speech');
+    
   // Creates a client
   const client = new textToSpeech.TextToSpeechClient();
 
@@ -21,4 +22,8 @@ export async function googleTts(
   const [response] = await client.synthesizeSpeech(request);
 
   return { audio: response.audioContent };
+  } catch (error) {
+    console.error('Error during TTS request:', error);
+    throw new Error('TTS request failed');
+  }
 }

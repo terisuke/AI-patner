@@ -86,5 +86,13 @@
   "GSVITTSBatchSize": "GSVI TTS 批次大小 (1 ~ 100 數值越大推理速度越快，太大可能會用完記憶體)",
   "GSVITTSSpeechRate": "語速 (0.5 ~ 2.0 數字越大越快)",
   "CharacterName": "角色名字",
-  "ShowCharacterName": "角色名字显示"
+  "ShowCharacterName": "角色名字显示",
+  "Email": "電子郵件",
+  "Password": "密碼",
+  "Login": "登錄",
+  "Login with Google": "使用 Google 登錄",
+  "Login with Email & Password": "使用電子郵件和密碼登錄",
+  "Don't have an account?": "沒有帳戶嗎？",
+  "Sign Up": "註冊",
+  "Already have an account?": "已有帳戶？"
 }

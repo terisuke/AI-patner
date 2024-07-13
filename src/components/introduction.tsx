@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { Link } from "./link";
 import { IconButton } from "./iconButton";
 import i18n from "i18next";
@@ -10,31 +10,34 @@ type Props = {
   selectLanguage: string;
   setSelectLanguage: (show: string) => void;
   setSelectVoiceLanguage: (show: string) => void;
+  onIntroductionClosed: () => void; // 追加
 };
+
 export const Introduction = ({
   dontShowIntroduction,
   onChangeDontShowIntroduction,
   selectLanguage,
   setSelectLanguage,
-  setSelectVoiceLanguage
+  setSelectVoiceLanguage,
+  onIntroductionClosed, // 追加
 }: Props) => {
   const [opened, setOpened] = useState(true);
 
-  const handleDontShowIntroductionChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      onChangeDontShowIntroduction(event.target.checked);
-      updateLanguage();
-    },
-    [onChangeDontShowIntroduction]
-  );
+  // const handleDontShowIntroductionChange = useCallback(
+  //   (event: React.ChangeEvent<HTMLInputElement>) => {
+  //     onChangeDontShowIntroduction(event.target.checked);
+  //     updateLanguage();
+  //   },
+  //   [onChangeDontShowIntroduction]
+  // );
 
   const { t } = useTranslation();
 
   const updateLanguage = () => {
-    console.log('i18n.language', i18n.language);
-    // selectLanguage: "JP"
     let languageCode = i18n.language.toUpperCase();
-    languageCode = languageCode == "JA" ? "JP" : languageCode
+    if (languageCode === "JA") {
+      languageCode = "JP";
+    }
     setSelectLanguage(languageCode);
     setSelectVoiceLanguage(getVoiceLanguageCode(languageCode));
   }
@@ -55,6 +58,12 @@ export const Introduction = ({
         return 'ja-JP';
     }
   }
+
+  useEffect(() => {
+    if (!opened) {
+      onIntroductionClosed();
+    }
+  }, [opened, onIntroductionClosed]);
 
   return opened ? (
     <div className="absolute z-40 w-full h-full px-24 py-40 bg-black/30 font-M_PLUS_2">
@@ -117,14 +126,14 @@ export const Introduction = ({
             <br />
             {t('RepositoryURL')}<span> </span>
             <Link
-              url={"https://github.com/tegnike/aituber-kit"}
-              label={"https://github.com/tegnike/aituber-kit"}
+              url={"https://github.com/terisuke/miho"}
+              label={"https://github.com/terisuke/miho"}
             />
           </div>
         </div>
 
         {/* dontShowIntroductionのチェックボックスを表示 */}
-        <div className="my-24">
+        {/* <div className="my-24">
           <label className="flex items-center">
             <input
               type="checkbox"
@@ -134,7 +143,7 @@ export const Introduction = ({
             />
             <span>{t('DontShowIntroductionNextTime')}</span>
           </label>
-        </div>
+        </div> */}
 
         <div className="my-24">
           <button
@@ -150,7 +159,7 @@ export const Introduction = ({
 
         {selectLanguage === 'JP' && (
           <div className="my-24">
-            <p>You can select the language from the settings. English and Traditional Chinese are available.</p>
+            <p>You can select the language from the settings. English,Traditional Chinese and Korean are available.</p>
           </div>
         )}
       </div>

@@ -87,5 +87,13 @@
   "GSVITTSBatchSize": "GSVI TTS バッチサイズ (1 ~ 100 数値が大きいほど推論速度は速くなりますが、大きすぎるとメモリを使い果たす可能性があります)",
   "GSVITTSSpeechRate": "話速 (0.5 ~ 2.0 数値が大きいほど速い)",
   "CharacterName": "キャラクター名",
-  "ShowCharacterName": "キャラクター名表示"
+  "ShowCharacterName": "キャラクター名表示",
+  "Email": "メールアドレス",
+  "Password": "パスワード",
+  "Login": "ログイン",
+  "Login with Google": "Googleでログイン",
+  "Login with Email & Password": "メールアドレスとパスワードでログイン",
+  "Don't have an account?": "アカウントをお持ちでないですか？",
+  "Sign Up": "サインアップ",
+  "Already have an account?": "アカウントをお持ちですか？"
 }

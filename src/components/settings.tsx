@@ -13,11 +13,14 @@ import {
 import { Link } from "./link";
 import i18n from "i18next";
 import { useTranslation } from 'react-i18next';
+import { SYSTEM_PROMPT } from "@/features/constants/systemPromptConstants";
 import speakers from './speakers.json';
 
 type Props = {
   selectAIService: string;
   onChangeAIService: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  userName: string;
+  setUserName: (name: string) => void;
   selectAIModel: string;
   setSelectAIModel: (model: string) => void;
   openAiKey: string;
@@ -37,6 +40,7 @@ type Props = {
   difyConversationId: string;
   onChangeDifyConversationId: (id: string) => void;
   systemPrompt: string;
+  setSystemPrompt: (prompt: string) => void;
   chatLog: Message[];
   codeLog: Message[];
   koeiroParam: KoeiroParam;
@@ -98,6 +102,9 @@ export const Settings = ({
   onChangeAIService,
   selectAIModel,
   setSelectAIModel,
+  userName,
+  setUserName,
+  setSystemPrompt,
   openAiKey,
   onChangeOpenAiKey,
   anthropicKey,
@@ -182,6 +189,13 @@ export const Settings = ({
       }
     }
   }, [setSelectLanguage]);
+
+  // ユーザー名を更新する関数
+  const onChangeUserName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newUserName = event.target.value;
+    setUserName(newUserName);
+    setSystemPrompt(SYSTEM_PROMPT(newUserName));
+  };
   
   // オブジェクトを定義して、各AIサービスのデフォルトモデルを保存する
   // ローカルLLMが選択された場合、AIモデルを空文字に設定
@@ -297,6 +311,18 @@ export const Settings = ({
             </div>
             <div className="my-8">
               <TextButton onClick={onClickOpenBgFile}>{t('ChangeBackgroundImage')}</TextButton>
+            </div>
+          </div>
+          {/* UserNameの設定 */}
+          <div className="my-40">
+            <div className="my-16 typography-20 font-bold">{t("UserName")}</div>
+            <div className="my-8">
+              <input
+                className="px-16 py-8 bg-surface1 hover:bg-surface1-hover rounded-8"
+                type="text"
+                value={userName}
+                onChange={onChangeUserName}
+              />
             </div>
           </div>
           {/* 外部接続モード */}

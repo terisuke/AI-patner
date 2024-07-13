@@ -9,6 +9,8 @@ import { ViewerContext } from "@/features/vrmViewer/viewerContext";
 import { AssistantText } from "./assistantText";
 import { useTranslation } from 'react-i18next';
 import { testVoice } from "@/features/messages/speakCharacter";
+import { getAuth, signOut } from "firebase/auth";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 type Props = {
   selectAIService: string;
@@ -85,12 +87,17 @@ type Props = {
   onChangeCharacterName: (key: string) => void;
   showCharacterName: boolean;
   onChangeShowCharacterName: (show: boolean) => void;
+  userName: string;
+  setUserName: (name: string) => void;
+  setSystemPrompt: (prompt: string) => void;
 };
 export const Menu = ({
   selectAIService,
   onChangeAIService,
   selectAIModel,
   setSelectAIModel,
+  userName,
+  setUserName,
   openAiKey,
   onChangeOpenAiKey,
   anthropicKey,
@@ -161,6 +168,7 @@ export const Menu = ({
   onChangeCharacterName,
   showCharacterName,
   onChangeShowCharacterName,
+  setSystemPrompt,
 }: Props) => {
   const [showSettings, setShowSettings] = useState(false);
   const [showChatLog, setShowChatLog] = useState(false);
@@ -397,6 +405,17 @@ export const Menu = ({
     [onChangeGSVITtsSpeechRate]
   );
 
+    const handleLogout = useCallback(() => {
+    const auth = getAuth();
+    signOut(auth).then(() => {
+      // ログアウト成功時の処理（例：ログインページにリダイレクト）
+      window.location.href = "/login";
+    }).catch((error) => {
+      // エラーハンドリング
+      console.error("Logout error:", error);
+    });
+  }, []);
+
   const handleCharacterName = useCallback(
     (event: React.ChangeEvent<HTMLInputElement>) => {
       onChangeCharacterName(event.target.value);
@@ -436,6 +455,13 @@ export const Menu = ({
               onClick={() => setShowChatLog(true)}
             />
           )}
+          <IconButton
+            iconName="24/Logout"
+            customIcon={<LogoutIcon />} // LogoutIconを使用
+            isProcessing={false}
+            onClick={handleLogout} // ログアウト関数を呼び出す
+            label={t('Logout')}
+          />
         </div>
       </div>
       {
@@ -449,6 +475,9 @@ export const Menu = ({
           onChangeAIService={handleChangeAIService}
           selectAIModel={selectAIModel}
           setSelectAIModel={setSelectAIModel}
+          userName={userName}
+          setUserName={setUserName}
+          setSystemPrompt={setSystemPrompt}
           openAiKey={openAiKey}
           onChangeOpenAiKey={handleOpenAiKeyChange}
           anthropicKey={anthropicKey}

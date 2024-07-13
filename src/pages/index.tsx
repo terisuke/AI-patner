@@ -18,11 +18,19 @@ import "@/lib/i18n";
 import { useTranslation } from 'react-i18next';
 import { fetchAndProcessComments } from "@/features/youtube/youtubeComments";
 import { buildUrl } from "@/utils/buildUrl";
+import { getAuth } from "firebase/auth";
+import usePreviousRoute from '@/components/usePreviousRoute';
+import { saveChatLog } from "@/lib/firebase";
+import React from "react";
 
 export default function Home() {
   const { viewer } = useContext(ViewerContext);
 
-  const [systemPrompt, setSystemPrompt] = useState(SYSTEM_PROMPT);
+  const [userId, setUserId] = useState<string | null>(null);
+  const [startDate, setStartDate] = useState<string>(new Date().toISOString());
+  const previousRoute = usePreviousRoute();
+  const [userName, setUserName] = useState("きみ");
+  const [systemPrompt, setSystemPrompt] = useState(() => SYSTEM_PROMPT("きみ"));
   const [selectAIService, setSelectAIService] = useState("openai");
   const [selectAIModel, setSelectAIModel] = useState("gpt-3.5-turbo");
   const [openAiKey, setOpenAiKey] = useState("");
@@ -59,8 +67,8 @@ export default function Home() {
   const [backgroundImageUrl, setBackgroundImageUrl] = useState(
     process.env.NEXT_PUBLIC_BACKGROUND_IMAGE_PATH !== undefined ? process.env.NEXT_PUBLIC_BACKGROUND_IMAGE_PATH : "/bg-c.png"
   );
-  const [dontShowIntroduction, setDontShowIntroduction] = useState(false);
-  const [gsviTtsServerUrl, setGSVITTSServerUrl] = useState(process.env.NEXT_PUBLIC_LOCAL_TTS_URL && process.env.NEXT_PUBLIC_LOCAL_TTS_URL !== "" ? process.env.NEXT_PUBLIC_LOCAL_TTS_URL : "http://127.0.0.1:5000/tts");
+  const [dontShowIntroduction, setDontShowIntroduction] = useState<boolean>(false);
+  const [gsviTtsServerUrl, setGSVITTSServerUrl] = useState(process.env.NEXT_PUBLIC_TTS_URL && process.env.NEXT_PUBLIC_TTS_URL !== "" ? process.env.NEXT_PUBLIC_TTS_URL : "http://127.0.0.1:5000/tts");
   const [gsviTtsModelId, setGSVITTSModelID] = useState("");
   const [gsviTtsBatchSize, setGSVITTSBatchSize] = useState(2);
   const [gsviTtsSpeechRate, setGSVITTSSpeechRate] = useState(1.0);
@@ -84,7 +92,8 @@ export default function Home() {
     const storedData = window.localStorage.getItem("chatVRMParams");
     if (storedData) {
       const params = JSON.parse(storedData);
-      setSystemPrompt(params.systemPrompt || SYSTEM_PROMPT);
+      setUserName(params.userName || "きみ");
+      setSystemPrompt(() => SYSTEM_PROMPT(params.userName || "きみ"));
       setKoeiroParam(params.koeiroParam || DEFAULT_PARAM);
       setChatLog(Array.isArray(params.chatLog) ? params.chatLog : []);
       setCodeLog(Array.isArray(params.codeLog) ? params.codeLog : []);
@@ -111,9 +120,9 @@ export default function Home() {
       setConversationContinuityMode(params.conversationContinuityMode || false);
       changeWebSocketMode(params.webSocketMode || false);
       setStylebertvits2ServerURL(params.stylebertvits2ServerUrl || "http://127.0.0.1:5000");
-      setStylebertvits2ModelId(params.stylebertvits2ModelId || "0");
+      setStylebertvits2ModelId(params.stylebertvits2ModelId || "0")
       setStylebertvits2Style(params.stylebertvits2Style || "Neutral");
-      setDontShowIntroduction(params.dontShowIntroduction || false);
+      setDontShowIntroduction(false);
       setGSVITTSServerUrl(params.gsviTtsServerUrl || "http://127.0.0.1:5000/tts");
       setGSVITTSModelID(params.gsviTtsModelId || "");
       setGSVITTSBatchSize(params.gsviTtsBatchSize || 2);
@@ -213,8 +222,11 @@ export default function Home() {
       });
 
       setChatLog(newChatLog);
+      if (userId) {
+        saveChatLog(userId, newChatLog, startDate); // 開始日付を追加
+      }
     },
-    [chatLog]
+    [chatLog, userId, startDate]
   );
 
   const handleChangeCodeLog = useCallback(
@@ -412,7 +424,10 @@ export default function Home() {
 
     setChatLog([...currentChatLog, ...aiTextLog]);
     setChatProcessing(false);
-  }, [selectAIService, openAiKey, selectAIModel, anthropicKey, googleKey, localLlmUrl, groqKey, difyKey, difyUrl, difyConversationId, koeiroParam, handleSpeakAi]);
+if (userId) {
+      saveChatLog(userId, [...currentChatLog, ...aiTextLog], startDate); // 開始日付を追加
+    }
+  }, [selectAIService, openAiKey, selectAIModel, anthropicKey, googleKey, localLlmUrl, groqKey, difyKey, difyUrl, difyConversationId, koeiroParam, handleSpeakAi, userId, startDate]);
 
   const preProcessAIResponse = useCallback(async (messages: Message[]) => {
     await processAIResponse(chatLog, messages);
@@ -509,6 +524,10 @@ export default function Home() {
         ];
         setChatLog(messageLog);
 
+        if (userId) {
+          saveChatLog(userId, messageLog, startDate); // 開始日付を追加
+        }
+
         const processedMessageLog = messageLog.map(message => ({
           role: ['assistant', 'user', 'system'].includes(message.role) ? message.role : 'assistant',
           content: message.content
@@ -531,7 +550,7 @@ export default function Home() {
         setChatProcessing(false);
       }
     },
-    [webSocketMode, koeiroParam, handleSpeakAi, codeLog, t, selectAIService, openAiKey, anthropicKey, googleKey, groqKey, difyKey, chatLog, systemPrompt, processAIResponse]
+    [webSocketMode, koeiroParam, handleSpeakAi, codeLog, t, selectAIService, openAiKey, anthropicKey, googleKey, groqKey, difyKey, chatLog, systemPrompt, processAIResponse, userId, startDate]
   );
 
   ///取得したコメントをストックするリストの作成（tmpMessages）
@@ -541,6 +560,32 @@ export default function Home() {
     emotion: string;
   }
   const [tmpMessages, setTmpMessages] = useState<tmpMessage[]>([]);
+  //ログインページを経由するとファーストコメントを出力
+  const handleIntroductionClosed = useCallback(() => {
+    const auth = getAuth();
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        setUserId(user.uid);
+        if (previousRoute === "/login") {
+          console.log("User logged in via login page, sending first chat message");
+          handleSendChat("あなたは美穂という名前のパートナーです。「おかえり、また来てくれてありがとう」と言う内容をそのまま出力してあなたから会話を開始してください。"
+          , "assistant");
+        } else if (previousRoute === "/signup") {
+          console.log("User logged in via signup page, sending first chat message");
+          handleSendChat("あなたは美穂という名前のパートナーです。「こんにちは、美穂！あなたの名前は何ていうの？「〜だよ」って言う形で教えてね♪」という内容をそのまま出力してあなたから会話を開始してください", "assistant");
+        } else {
+          console.log("User logged in directly, sending welcome back message");
+          handleSendChat("あなたは美穂という名前のパートナーです。「おかえり、また来てくれてありがとう」と言う内容をそのまま出力してあなたから会話を開始してください。"
+          , "assistant");
+        }
+      } else {
+        setUserId(null);
+      }
+    });
+
+    return () => unsubscribe();
+  }, [previousRoute]);
+
 
   useEffect(() => {
     const handleOpen = (event: Event) => {
@@ -628,7 +673,9 @@ export default function Home() {
   useEffect(() => {
     console.log("chatProcessingCount:", chatProcessingCount);
     fetchAndProcessCommentsCallback();
-  }, [chatProcessingCount, youtubeLiveId, youtubeApiKey, conversationContinuityMode]);
+  }, [chatProcessingCount, youtubeLiveId, youtubeApiKey, conversationContinuityMode,
+    fetchAndProcessCommentsCallback
+  ]);
 
   useEffect(() => {
     if (youtubeNoCommentCount < 1) return;
@@ -636,7 +683,7 @@ export default function Home() {
     setTimeout(() => {
       fetchAndProcessCommentsCallback();
     }, INTERVAL_MILL_SECONDS_RETRIEVING_COMMENTS);
-  }, [youtubeNoCommentCount, conversationContinuityMode]);
+  }, [youtubeNoCommentCount, conversationContinuityMode, fetchAndProcessCommentsCallback, youtubeSleepMode]);
 
   return (
     <>
@@ -649,6 +696,7 @@ export default function Home() {
             selectLanguage={selectLanguage}
             setSelectLanguage={setSelectLanguage}
             setSelectVoiceLanguage={setSelectVoiceLanguage}
+            onIntroductionClosed={handleIntroductionClosed}
           />
         )}
         <VrmViewer />
@@ -662,6 +710,8 @@ export default function Home() {
           onChangeAIService={setSelectAIService}
           selectAIModel={selectAIModel}
           setSelectAIModel={setSelectAIModel}
+          userName={userName}
+          setUserName={setUserName}
           openAiKey={openAiKey}
           onChangeOpenAiKey={setOpenAiKey}
           anthropicKey={anthropicKey}
@@ -703,7 +753,7 @@ export default function Home() {
           onChangeConversationContinuityMode={setConversationContinuityMode}
           handleClickResetChatLog={() => setChatLog([])}
           handleClickResetCodeLog={() => setCodeLog([])}
-          handleClickResetSystemPrompt={() => setSystemPrompt(SYSTEM_PROMPT)}
+          handleClickResetSystemPrompt={() => setSystemPrompt(SYSTEM_PROMPT("きみ"))}
           onChangeKoeiromapKey={setKoeiromapKey}
           onChangeVoicevoxSpeaker={setVoicevoxSpeaker}
           onChangeGoogleTtsType={setGoogleTtsType}
@@ -729,6 +779,7 @@ export default function Home() {
           gsviTtsSpeechRate={gsviTtsSpeechRate}
           onChangeGSVITtsSpeechRate={setGSVITTSSpeechRate}
           showCharacterName={showCharacterName}
+          setSystemPrompt={setSystemPrompt}
           onChangeShowCharacterName={setShowCharacterName}
           characterName={characterName}
           onChangeCharacterName={setCharacterName}

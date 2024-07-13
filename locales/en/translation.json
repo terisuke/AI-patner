@@ -86,5 +86,14 @@
   "GSVITTSBatchSize": "GSVI TTS Batch Size (1 ~ 100 The larger the value, the faster the inference speed, but it might exhaust memory if too large.)",
   "GSVITTSSpeechRate": "Speech Rate (0.5 ~ 2.0 The bigger the value, the faster it is.)",
   "CharacterName": "Character name",
-  "ShowCharacterName": "Display character name"
+  "ShowCharacterName": "Display character name",
+  "Email": "Email",
+  "Password": "Password",
+  "Login": "Login",
+  "Google": "Google",
+  "Login with Google": "Login with Google",
+  "Login with Email & Password": "Login with Email & Password",
+  "Don't have an account?": "Don't have an account?",
+  "Sign Up": "Sign Up",
+  "Already have an account?": "Already have an account?"
 }

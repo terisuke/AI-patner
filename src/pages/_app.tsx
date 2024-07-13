@@ -1,10 +1,25 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import "@charcoal-ui/icons";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import i18n from '../lib/i18n';
+import { useRouter } from 'next/router';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../lib/firebase';
 
 export default function App({ Component, pageProps }: AppProps) {
+  const router = useRouter();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user && router.pathname !== '/login') {
+        router.push('/login');
+      }
+    });
+
+    return () => unsubscribe();
+  }, [router]);
+  
   useEffect(() => {
     const storedData = window.localStorage.getItem('chatVRMParams');
     if (storedData) {

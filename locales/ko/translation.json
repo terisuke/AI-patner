@@ -86,5 +86,13 @@
   "GSVITTSBatchSize": "GSVI TTS 배치 크기 (1 ~ 100 숫자가 클수록 추론 속도가 빨라지지만, 너무 크면 메모리가 부족할 수 있습니다)",
   "GSVITTSSpeechRate": "말 속도 (0.5 ~ 2.0 숫자가 클수록 빠름)",
   "CharacterName": "캐릭터 이름",
-  "ShowCharacterName": "캐릭터 이름 표시"
+  "ShowCharacterName": "캐릭터 이름 표시",
+  "Email": "이메일",
+  "Password": "비밀번호",
+  "Login": "로그인",
+  "Login with Google": "Google로 로그인",
+  "Login with Email & Password": "이메일 및 비밀번호로 로그인",
+  "Don't have an account?": "계정이 없으신가요?",
+  "Sign Up": "가입하기",
+  "Already have an account?": "이미 계정이 있으신가요?"
 }
