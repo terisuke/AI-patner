@@ -126,8 +126,8 @@ export const Introduction = ({
             <br />
             {t('RepositoryURL')}<span> </span>
             <Link
-              url={"https://github.com/terisuke/miho"}
-              label={"https://github.com/terisuke/miho"}
+              url={"https://github.com/terisuke/AI-patner"}
+              label={"https://github.com/terisuke/AI-patner"}
             />
           </div>
         </div>
