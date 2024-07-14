@@ -215,6 +215,42 @@ export default function Home() {
     showCharacterName
   ]);
 
+  useEffect(() => {
+    const storedEnvVariables = window.localStorage.getItem("envVariables");
+    const currentEnvVariables = JSON.stringify({
+      openAiKey: process.env.NEXT_PUBLIC_OPEN_AI_KEY,
+      anthropicKey: process.env.NEXT_PUBLIC_ANTHROPIC_KEY,
+      googleKey: process.env.NEXT_PUBLIC_GOOGLE_KEY,
+      groqKey: process.env.NEXT_PUBLIC_GROQ_KEY,
+      localLlmUrl: process.env.NEXT_PUBLIC_LOCAL_LLM_URL,
+      difyKey: process.env.NEXT_PUBLIC_DIFY_KEY,
+      difyUrl: process.env.NEXT_PUBLIC_DIFY_URL,
+      googleTtsType: process.env.NEXT_PUBLIC_GOOGLE_TTS_TYPE,
+      gsviTtsServerUrl: process.env.NEXT_PUBLIC_TTS_URL,
+    });
+
+    if (!storedEnvVariables) {
+      window.localStorage.setItem("envVariables", currentEnvVariables);
+    } else if (storedEnvVariables !== currentEnvVariables) {
+      window.localStorage.setItem("envVariables", currentEnvVariables);
+      window.localStorage.clear();
+      window.location.reload();
+    }
+  }, []);
+
+  useEffect(() => {
+    const storedChatVRMParams = window.localStorage.getItem("chatVRMParams");
+    if (storedChatVRMParams) {
+      const params = JSON.parse(storedChatVRMParams);
+      const updatedParams = {
+        ...params,
+        gsviTtsServerUrl: process.env.NEXT_PUBLIC_TTS_URL || "http://127.0.0.1:5000/tts",
+      };
+      window.localStorage.setItem("chatVRMParams", JSON.stringify(updatedParams));
+      setGSVITTSServerUrl(updatedParams.gsviTtsServerUrl);
+    }
+  }, [process.env.NEXT_PUBLIC_TTS_URL]);
+
   const handleChangeChatLog = useCallback(
     (targetIndex: number, text: string) => {
       const newChatLog = chatLog.map((v: Message, i) => {
@@ -424,7 +460,7 @@ export default function Home() {
 
     setChatLog([...currentChatLog, ...aiTextLog]);
     setChatProcessing(false);
-if (userId) {
+    if (userId) {
       saveChatLog(userId, [...currentChatLog, ...aiTextLog], startDate); // 開始日付を追加
     }
   }, [selectAIService, openAiKey, selectAIModel, anthropicKey, googleKey, localLlmUrl, groqKey, difyKey, difyUrl, difyConversationId, koeiroParam, handleSpeakAi, userId, startDate]);

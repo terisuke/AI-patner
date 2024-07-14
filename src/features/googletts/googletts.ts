@@ -4,8 +4,7 @@ export async function googleTts(
 ) {
   try {
   // Imports the Google Cloud client library
-    const textToSpeech = require('@google-cloud/text-to-speech');
-    
+  const textToSpeech = require('@google-cloud/text-to-speech');
   // Creates a client
   const client = new textToSpeech.TextToSpeechClient();
 
