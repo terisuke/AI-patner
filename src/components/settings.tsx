@@ -93,6 +93,7 @@ type Props = {
   gsviTtsSpeechRate: number;
   onChangeGSVITtsSpeechRate: (event: React.ChangeEvent<HTMLInputElement>) => void;
   characterName: string;
+  setCharacterName: (name: string) => void;
   onChangeCharacterName: (event: React.ChangeEvent<HTMLInputElement>) => void;
   showCharacterName: boolean;
   onChangeShowCharacterName: (show: boolean) => void;
@@ -173,7 +174,7 @@ export const Settings = ({
   gsviTtsSpeechRate,
   onChangeGSVITtsSpeechRate,
   characterName,
-  onChangeCharacterName,
+  setCharacterName,
   showCharacterName,
   onChangeShowCharacterName,
 }: Props) => {
@@ -195,6 +196,12 @@ export const Settings = ({
     const newUserName = event.target.value;
     setUserName(newUserName);
     setSystemPrompt(SYSTEM_PROMPT(newUserName));
+  };
+  // キャラクター名を更新する関数
+  const onChangeCharacterName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newCharacterName = event.target.value;
+    setCharacterName(newCharacterName);
+    setSystemPrompt(SYSTEM_PROMPT(newCharacterName));
   };
   
   // オブジェクトを定義して、各AIサービスのデフォルトモデルを保存する
@@ -277,7 +284,7 @@ export const Settings = ({
               </select>
             </div>
           </div>
-          {/* キャラクター名表示 */}
+          {/* キャラクター名の設定 */}
           <div className="my-40">
             <div className="my-16 typography-20 font-bold">
               {t('CharacterName')}

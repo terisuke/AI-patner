@@ -84,6 +84,7 @@ type Props = {
   gsviTtsSpeechRate: number;
   onChangeGSVITtsSpeechRate: (speed: number) => void;
   characterName: string;
+  setCharacterName: (name: string) => void;
   onChangeCharacterName: (key: string) => void;
   showCharacterName: boolean;
   onChangeShowCharacterName: (show: boolean) => void;
@@ -165,6 +166,7 @@ export const Menu = ({
   gsviTtsSpeechRate,
   onChangeGSVITtsSpeechRate,
   characterName,
+  setCharacterName,
   onChangeCharacterName,
   showCharacterName,
   onChangeShowCharacterName,
@@ -549,6 +551,7 @@ export const Menu = ({
           gsviTtsSpeechRate={gsviTtsSpeechRate}
           onChangeGSVITtsSpeechRate={handleChangeGSVITtsSpeechRate}
           characterName={characterName}
+          setCharacterName={setCharacterName}
           onChangeCharacterName={handleCharacterName}
           showCharacterName={showCharacterName}
           onChangeShowCharacterName={handleShowCharacterName}

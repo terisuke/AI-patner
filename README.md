@@ -1,4 +1,4 @@
-<h1 align="center">AITuberキット</h1>
+<h1 align="center">AI-Partner</h1>
 
 <p align="center">
   <img style="max-width: 100%;" src="https://github.com/tegnike/aituber-kit/assets/35606144/04e073de-ef99-4585-8bfa-aaf936409e79">

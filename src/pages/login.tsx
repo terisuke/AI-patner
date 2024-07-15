@@ -25,14 +25,17 @@ const Login = () => {
   }, [router]);
 
   const handleGoogleLogin = async () => {
-    const provider = new GoogleAuthProvider();
-    try {
-      await signInWithPopup(auth, provider);
-      router.push("/");
-    } catch (err: any) {
-      setError(err.message);
-    }
-  };
+  const provider = new GoogleAuthProvider();
+  provider.setCustomParameters({
+    state: JSON.stringify({ previousRoute: router.pathname }) // 現在のルート情報を含める
+  });
+  try {
+    await signInWithPopup(auth, provider);
+    router.push("/");
+  } catch (err: any) {
+    setError(err.message);
+  }
+};
 
   const handleEmailLogin = async () => {
     try {

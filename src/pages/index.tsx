@@ -28,9 +28,10 @@ export default function Home() {
 
   const [userId, setUserId] = useState<string | null>(null);
   const [startDate, setStartDate] = useState<string>(new Date().toISOString());
-  const previousRoute = usePreviousRoute();
+  const [previousRoute, setPreviousRoute] = useState<string | null>(null);
+  const previousRouteHook = usePreviousRoute();
   const [userName, setUserName] = useState("きみ");
-  const [systemPrompt, setSystemPrompt] = useState(() => SYSTEM_PROMPT("きみ"));
+  const [systemPrompt, setSystemPrompt] = useState(() => SYSTEM_PROMPT("きみ","美穂"));
   const [selectAIService, setSelectAIService] = useState("openai");
   const [selectAIModel, setSelectAIModel] = useState("gpt-3.5-turbo");
   const [openAiKey, setOpenAiKey] = useState("");
@@ -77,7 +78,7 @@ export default function Home() {
   const [youtubeNoCommentCount, setYoutubeNoCommentCount] = useState(0);
   const [youtubeSleepMode, setYoutubeSleepMode] = useState(false);
   const [chatProcessingCount, setChatProcessingCount] = useState(0);
-  const [characterName, setCharacterName] = useState("");
+  const [characterName, setCharacterName] = useState("美穂");
   const [showCharacterName, setShowCharacterName] = useState(true);
 
   const incrementChatProcessingCount = () => {
@@ -93,7 +94,7 @@ export default function Home() {
     if (storedData) {
       const params = JSON.parse(storedData);
       setUserName(params.userName || "きみ");
-      setSystemPrompt(() => SYSTEM_PROMPT(params.userName || "きみ"));
+      setSystemPrompt(() => SYSTEM_PROMPT(params.userName || "きみ",params.characterName || "美穂"));
       setKoeiroParam(params.koeiroParam || DEFAULT_PARAM);
       setChatLog(Array.isArray(params.chatLog) ? params.chatLog : []);
       setCodeLog(Array.isArray(params.codeLog) ? params.codeLog : []);
@@ -127,8 +128,14 @@ export default function Home() {
       setGSVITTSModelID(params.gsviTtsModelId || "");
       setGSVITTSBatchSize(params.gsviTtsBatchSize || 2);
       setGSVITTSSpeechRate(params.gsviTtsSpeechRate || 1.0);
-      setCharacterName(params.characterName || "CHARACTER");
+      setCharacterName(params.characterName || "美穂");
       setShowCharacterName(params.showCharacterName || true);
+    }
+
+    const storedPreviousRoute = window.localStorage.getItem('previousRoute');
+    if (storedPreviousRoute) {
+      setPreviousRoute(storedPreviousRoute);
+      window.localStorage.removeItem('previousRoute'); // 読み取り後に削除
     }
   }, []);
 
@@ -596,23 +603,24 @@ export default function Home() {
     emotion: string;
   }
   const [tmpMessages, setTmpMessages] = useState<tmpMessage[]>([]);
-  //ログインページを経由するとファーストコメントを出力
+
+  // ユーザーがログインしたらファーストコメントを出力
   const handleIntroductionClosed = useCallback(() => {
     const auth = getAuth();
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setUserId(user.uid);
+
         if (previousRoute === "/login") {
           console.log("User logged in via login page, sending first chat message");
-          handleSendChat("あなたは美穂という名前のパートナーです。「おかえり、また来てくれてありがとう」と言う内容をそのまま出力してあなたから会話を開始してください。"
+          handleSendChat(`あなたは${characterName}という名前の女性パートナーです。おかえり、また来てくれてありがとう！から始まる文章を出力して、あなたから会話を開始してください。`
           , "assistant");
         } else if (previousRoute === "/signup") {
           console.log("User logged in via signup page, sending first chat message");
-          handleSendChat("あなたは美穂という名前のパートナーです。「こんにちは、美穂！あなたの名前は何ていうの？「〜だよ」って言う形で教えてね♪」という内容をそのまま出力してあなたから会話を開始してください", "assistant");
+          handleSendChat(`あなたは${characterName}という名前の女性パートナーです。「こんにちは、私は${characterName}！あなたの名前は何ていうの？「〜だよ」って言う形で教えてね♪」という文章をそのまま出力して、あなたから会話を開始してください。`, "assistant");
         } else {
-          console.log("User logged in directly, sending welcome back message");
-          handleSendChat("あなたは美穂という名前のパートナーです。「おかえり、また来てくれてありがとう」と言う内容をそのまま出力してあなたから会話を開始してください。"
-          , "assistant");
+          console.log("Continuing the conversation as it is neither signup nor login");
+          handleSendChat(`あなたは${characterName}という名前の女性パートナーです。やっほー！前も来てくれたよね？から始まる文章を出力して、あなたから会話を開始してください。`, "assistant");
         }
       } else {
         setUserId(null);
@@ -620,7 +628,7 @@ export default function Home() {
     });
 
     return () => unsubscribe();
-  }, [previousRoute]);
+  }, [previousRoute, characterName]);
 
 
   useEffect(() => {
@@ -818,6 +826,7 @@ export default function Home() {
           setSystemPrompt={setSystemPrompt}
           onChangeShowCharacterName={setShowCharacterName}
           characterName={characterName}
+          setCharacterName={setCharacterName}
           onChangeCharacterName={setCharacterName}
         />
       </div>

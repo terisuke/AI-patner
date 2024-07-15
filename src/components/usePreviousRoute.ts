@@ -8,6 +8,7 @@ export default function usePreviousRoute(): string {
   useEffect(() => {
     const handleRouteChange = (url: string) => {
       setPreviousRoute(router.asPath);
+      window.localStorage.setItem('previousRoute', router.asPath);
     };
 
     router.events.on('routeChangeStart', handleRouteChange);
