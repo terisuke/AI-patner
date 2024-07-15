@@ -6,11 +6,18 @@ import { useTranslation } from 'react-i18next';
 import GoogleIcon from '@mui/icons-material/Google';
 import { auth } from '../lib/firebase'; // Firebaseの初期化をインポート
 import React from "react";
+import EmailIcon from '@mui/icons-material/Email';
+import KeyboardreturnIcon from '@mui/icons-material/KeyboardReturn';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 const SignUp = () => {
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // パスワード表示の状態を追跡
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false); // 確認パスワード表示の状態を追跡
   const router = useRouter();
   const { t } = useTranslation();
 
@@ -33,6 +40,10 @@ const SignUp = () => {
   };
 
   const handleEmailSignUp = async () => {
+    if (password !== confirmPassword) {
+      setError(t("Passwords do not match"));
+      return;
+    }
     try {
       await createUserWithEmailAndPassword(auth, email, password);
       router.push("/");
@@ -44,6 +55,14 @@ const SignUp = () => {
   const handleLoginRedirect = () => {
     console.log("Redirecting to login page");
     router.push("/login");
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(!showConfirmPassword);
   };
 
   return (
@@ -67,29 +86,62 @@ const SignUp = () => {
             placeholder={t('Email')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-12 my-5"
           />
-          <input
-            type="password"
-            placeholder={t('Password')}
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full px-4 py-2 text-sm border rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
-          <button
-            onClick={handleEmailSignUp}
-            className="w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-md hover:bg-blue-600 active:bg-blue-700"
-          >
-            {t('Sign Up with Email & Password')}
-          </button>
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder={t('Password')}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-12 my-5"
+            />
+            <IconButton
+              onClick={togglePasswordVisibility}
+              className="absolute inset-y-0 right-0 flex items-center px-4"
+              customIcon={showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+              iconName="24/Close"
+              isProcessing={false}
+            />
+          </div>
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              placeholder={t('Confirm Password')}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-12 my-5"
+            />
+            <IconButton
+              onClick={toggleConfirmPasswordVisibility}
+              className="absolute inset-y-0 right-0 flex items-center px-4"
+              customIcon={showConfirmPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+              iconName="24/Close"
+              isProcessing={false}
+            />
+          </div>
+          <div className="flex items-center justify-center">
+          <IconButton
+              iconName="24/Close"
+              isProcessing={false}
+              customIcon={<EmailIcon />}
+              onClick={handleEmailSignUp}
+              className="flex items-center px-4 py-2 space-x-2 font-bold text-white bg-red-500 hover:bg-red-600 active:bg-red-700 rounded-oval"
+              label= {t('Sign Up with Email & Password')}
+            />
+          </div>
         </div>
         <div className="mt-8 space-y-4">
-          <button
-            onClick={handleLoginRedirect}
-            className="w-full px-4 py-2 font-bold text-blue-500 border border-blue-500 rounded-md hover:bg-blue-50 active:bg-blue-100"
-          >
-            {t("Login")}
-          </button>
+          <div className="flex items-center justify-center">
+            <IconButton
+                iconName="24/Close"
+                isProcessing={false}
+                customIcon={<KeyboardreturnIcon />}
+                onClick={handleLoginRedirect}
+                className="flex items-center px-4 py-2 space-x-2 font-bold text-white bg-red-500 hover:bg-red-600 active:bg-red-700 rounded-oval"
+                label = {t("Already have an account?")}
+              />
+          </div>
         </div>
       </div>
     </div>

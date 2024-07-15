@@ -12,14 +12,14 @@ export default function App({ Component, pageProps }: AppProps) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user && router.pathname !== '/login') {
+      if (!user && router.pathname !== '/login' && router.pathname !== '/signup') {
         router.push('/login');
       }
     });
 
     return () => unsubscribe();
   }, [router]);
-  
+
   useEffect(() => {
     const storedData = window.localStorage.getItem('chatVRMParams');
     if (storedData) {
@@ -32,6 +32,7 @@ export default function App({ Component, pageProps }: AppProps) {
       const languageCode = browserLanguage.match(/^zh/i) ? 'zh' : browserLanguage.split('-')[0].toLowerCase();
       i18n.changeLanguage(languageCode);
     }
-  })
+  }, []);
+
   return <Component {...pageProps} />;
 }

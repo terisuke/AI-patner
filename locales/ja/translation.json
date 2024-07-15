@@ -95,5 +95,9 @@
   "Login with Email & Password": "メールアドレスとパスワードでログイン",
   "Don't have an account?": "アカウントをお持ちでないですか？",
   "Sign Up": "サインアップ",
+  "Sign Up with Google": "Googleでサインアップ",
+  "Sign Up with Email & Password": "メールアドレスとパスワードでサインアップ",
+  "Passwords do not match": "パスワードが一致しません",
+  "Confirm Password": "パスワード確認",
   "Already have an account?": "アカウントをお持ちですか？"
 }

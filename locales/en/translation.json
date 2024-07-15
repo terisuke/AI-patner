@@ -95,5 +95,9 @@
   "Login with Email & Password": "Login with Email & Password",
   "Don't have an account?": "Don't have an account?",
   "Sign Up": "Sign Up",
+  "Sign Up with Google": "Sign Up with Google",
+  "Sign Up with Email & Password": "Sign Up with Email & Password",
+  "Passwords do not match": "Passwords do not match",
+  "Confirm Password": "Confirm Password",
   "Already have an account?": "Already have an account?"
 }

@@ -26,7 +26,7 @@ const nextConfig = {
     return {
       '/': { page: '/' },
       '/login': { page: '/login' },
-      '/signUp': { page: '/signUp' },
+      '/signup': { page: '/signup' },
       // 他のルートがあればここに追加
     };
   },
