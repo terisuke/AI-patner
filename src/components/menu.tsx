@@ -455,14 +455,16 @@ export const Menu = ({
               onClick={() => setShowChatLog(true)}
             />
           )}
-          <IconButton
-            iconName="24/Logout"
-            customIcon={<LogoutIcon />} // LogoutIconを使用
-            isProcessing={false}
-            onClick={handleLogout} // ログアウト関数を呼び出す
-            label={t('Logout')}
-          />
         </div>
+      </div>
+      <div className="absolute top-0 right-0 m-24">
+        <IconButton
+          iconName="24/Logout"
+          customIcon={<LogoutIcon />} // LogoutIconを使用
+          isProcessing={false}
+          onClick={handleLogout} // ログアウト関数を呼び出す
+          label={t('Logout')}
+        />
       </div>
       {
         webSocketMode ? 

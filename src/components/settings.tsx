@@ -326,7 +326,7 @@ export const Settings = ({
             </div>
           </div>
           {/* 外部接続モード */}
-          <div className="my-40">
+          {/* <div className="my-40">
             <div className="my-16 typography-20 font-bold">
               {t('ExternalConnectionMode')}
             </div>
@@ -341,7 +341,7 @@ export const Settings = ({
                 </TextButton>
               )}
             </div>
-          </div>
+          </div> */}
           {/* 外部連携モードでない時の設定 */}
           {(() => {
             if (!webSocketMode) {
@@ -364,17 +364,17 @@ export const Settings = ({
                       >
                         <option value="openai">OpenAI</option>
                         <option value="anthropic">Anthropic</option>
-                        <option value="google">Google Gemini</option>
+                        {/* <option value="google">Google Gemini</option>
                         <option value="groq">Groq</option>
                         <option value="localLlm">{t('LocalLLM')}</option>
-                        <option value="dify">Dify</option>
+                        <option value="dify">Dify</option> */}
                       </select>
                       </div>
                     {(() => {
                       if (selectAIService === "openai") {
                         return (
                           <div className="my-24">
-                            <div className="my-16 typography-20 font-bold">{t('OpenAIAPIKeyLabel')}</div>
+                            {/* <div className="my-16 typography-20 font-bold">{t('OpenAIAPIKeyLabel')}</div>
                             <input
                               className="text-ellipsis px-16 py-8 w-col-span-2 bg-surface1 hover:bg-surface1-hover rounded-8"
                               type="text"
@@ -385,7 +385,7 @@ export const Settings = ({
                             <div className="my-16">
                               {t('APIKeyInstruction')}<br />
                               <Link url="https://platform.openai.com/account/api-keys" label="OpenAI" />
-                            </div>
+                            </div> */}
                             <div className="my-16">
                               {t('ChatGPTInfo')}
                             </div>
@@ -406,7 +406,7 @@ export const Settings = ({
                       } else if (selectAIService === "anthropic") {
                         return (
                           <div className="my-24">
-                            <div className="my-16 typography-20 font-bold">{t('AnthropicAPIKeyLabel')}</div>
+                            {/* <div className="my-16 typography-20 font-bold">{t('AnthropicAPIKeyLabel')}</div>
                             <input
                               className="text-ellipsis px-16 py-8 w-col-span-2 bg-surface1 hover:bg-surface1-hover rounded-8"
                               type="text"
@@ -417,7 +417,7 @@ export const Settings = ({
                             <div className="my-16">
                               {t('APIKeyInstruction')}<br />
                               <Link url="https://console.anthropic.com" label="Anthropic" />
-                            </div>
+                            </div> */}
                             <div className="my-24">
                               <div className="my-16 typography-20 font-bold">{t('SelectModel')}</div>
                               <select
@@ -433,7 +433,8 @@ export const Settings = ({
                             </div>
                           </div>
                         );
-                      } else if (selectAIService === "google") {
+                      }
+                      else if (selectAIService === "google") {
                         return (
                           <div className="my-24">
                             <div className="my-16 typography-20 font-bold">{t('GoogleAPIKeyLabel')}</div>
@@ -552,7 +553,7 @@ export const Settings = ({
                       }
                     })()}
                   </div>
-                  <div className="my-40">
+                  {/* <div className="my-40">
                     <div className="my-16 typography-20 font-bold">
                       {t('YoutubeMode')}
                     </div>
@@ -611,7 +612,7 @@ export const Settings = ({
                         }
                       })()}
                     </div>
-                  </div>
+                  </div> */}
                   <div className="my-40">
                     <div className="my-8">
                       <div className="my-16 typography-20 font-bold">

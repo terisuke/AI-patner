@@ -249,7 +249,7 @@ export default function Home() {
       window.localStorage.setItem("chatVRMParams", JSON.stringify(updatedParams));
       setGSVITTSServerUrl(updatedParams.gsviTtsServerUrl);
     }
-  }, [process.env.NEXT_PUBLIC_TTS_URL]);
+  }, []);
 
   const handleChangeChatLog = useCallback(
     (targetIndex: number, text: string) => {
