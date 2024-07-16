@@ -86,7 +86,7 @@ const SignUp = () => {
             placeholder={t('Email')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-12 my-5"
+            className="w-full px-16 py-8 text-ellipsis border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-12 my-5"
           />
           <div className="relative">
             <input
@@ -94,7 +94,7 @@ const SignUp = () => {
               placeholder={t('Password')}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-12 my-5"
+              className="w-full px-16 py-8 text-ellipsis border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-12 my-5"
             />
             <IconButton
               onClick={togglePasswordVisibility}
@@ -110,7 +110,7 @@ const SignUp = () => {
               placeholder={t('Confirm Password')}
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-12 my-5"
+              className="w-full px-16 py-8 text-ellipsis border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-12 my-5"
             />
             <IconButton
               onClick={toggleConfirmPasswordVisibility}

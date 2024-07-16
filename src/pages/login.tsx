@@ -79,7 +79,7 @@ const Login = () => {
             placeholder={t('Email')}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-12 my-5"
+            className="w-full px-16 py-8 text-ellipsis border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-12 my-5"
           />
           <div className="relative">
             <input
@@ -87,7 +87,7 @@ const Login = () => {
               placeholder={t('Password')}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-2 text-sm border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-12 my-5"
+              className="w-full px-16 py-8 text-ellipsis border rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 h-12 my-5"
             />
             <IconButton
               onClick={togglePasswordVisibility}
@@ -116,7 +116,7 @@ const Login = () => {
               customIcon={<KeyboardreturnIcon />}
               onClick={handleSignUpRedirect}
               className="flex items-center px-4 py-2 space-x-2 font-bold text-white bg-red-500 hover:bg-red-600 active:bg-red-700 rounded-oval"
-              label = {t("Don't have an account?")}
+              label = {t("Sign Up")}
             />
           </div>
         </div>
