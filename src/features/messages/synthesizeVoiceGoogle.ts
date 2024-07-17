@@ -5,17 +5,16 @@ export async function synthesizeVoiceGoogleApi(
   const body = {
     message: message,
     ttsType: ttsType,
-    type: "google",
+    // type: "google",
   };
 
-  const res = await fetch("/api/tts/", {
+  const res = await fetch("https://us-central1-aipartner-426616.cloudfunctions.net/googleTtsFunction", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify(body),
   });
-  const data = (await res.json()) as any;
-
-  return { audio: data.audio };
+  // 
+  return res
 }

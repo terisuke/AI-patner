@@ -7,6 +7,9 @@ export const googleTtsFunction = functions.https.onRequest(async (req, res) => {
   console.log(req.query);
   try {
     const { audio } = await googleTts(message, ttsType);
+    res.set('Access-Control-Allow-Headers', '*');
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Methods', 'GET, HEAD, OPTIONS, POST');
     res.setHeader('Content-Type', 'audio/wav');
     res.send(audio);
   } catch (err) {

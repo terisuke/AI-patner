@@ -34,7 +34,7 @@ export default async function handler(
       message,
       ttsType
     );
-    return { audio: voice.audio };
+    voice = { audio: voice.audio };
   }
 
   res.status(200).json(voice);

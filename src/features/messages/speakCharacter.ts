@@ -175,10 +175,12 @@ export const fetchAudioGoogle = async (
     talk.message,
     ttsType
   );
-  const uint8Array = new Uint8Array(ttsVoice.audio.data);
-  const arrayBuffer: ArrayBuffer = uint8Array.buffer;
-  
-  return arrayBuffer;
+  // const uint8Array = new Uint8Array(ttsVoice.audio.data);
+  // const arrayBuffer: ArrayBuffer = uint8Array.buffer;
+  const blob = await ttsVoice.blob();
+  const buffer = await blob.arrayBuffer();
+  return buffer;
+  // return arrayBuffer;
 };
 
 export const fetchAudioStyleBertVITS2 = async (
