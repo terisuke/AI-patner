@@ -11,7 +11,7 @@
   "ConversationContinuityModeInfo3": "gpt-4o, gpt-4-turbo, claude-3-opus, claude-3.5-sonnetで比較的安定動作します。",
   "StatusOn": "状態：ON",
   "StatusOff": "状態：OFF",
-  "SelectAIService": "AIサービスを選択",
+  "SelectAIService": "AIサービスを選択(近日公開)",
   "LocalLLM": "ローカルLLM",
   "SelectModel": "モデルを選択",
   "OpenAIAPIKeyLabel": "OpenAI API キー",
@@ -20,7 +20,7 @@
   "GroqAPIKeyLabel": "Groq API キー",
   "DifyAPIKeyLabel": "Dify API キー",
   "APIKeyInstruction": "APIキーは下記のリンクから取得できます。取得したAPIキーをフォームに入力してください。",
-  "ChatGPTInfo": "ChatGPT APIはブラウザから直接アクセスしています。",
+  "ChatGPTInfo": "ChatGPT APIはブラウザから直接アクセスしています。OpenAI以外のAPI選択機能は近日公開予定です。",
   "LocalLLMInfo": "ローカルLLM サーバーを起動している必要があります。",
   "LocalLLMInfo2": "ローカルLLMのURL（ポート番号込み）とモデル名を入力してください。",
   "GroqInfo": "Groq APIはブラウザから直接アクセスしています。",
@@ -99,5 +99,8 @@
   "Sign Up with Email & Password": "メールアドレスとパスワードでサインアップ",
   "Passwords do not match": "パスワードが一致しません",
   "Confirm Password": "パスワード確認",
-  "Already have an account?": "アカウントをお持ちですか？"
+  "Already have an account?": "アカウントをお持ちですか？",
+  "Logout":"ログアウト",
+  "UserName": "ユーザー名",
+  "User survey": "ユーザーアンケート"
 }

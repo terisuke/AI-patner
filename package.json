@@ -20,6 +20,7 @@
     "@google-cloud/text-to-speech": "^5.0.1",
     "@google/generative-ai": "^0.11.3",
     "@mui/icons-material": "^5.16.0",
+    "@mui/material": "^5.16.4",
     "@tailwindcss/line-clamp": "^0.4.4",
     "@types/dom-speech-recognition": "^0.0.1",
     "@types/react-transition-group": "^4.4.10",

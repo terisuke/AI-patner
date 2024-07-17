@@ -11,7 +11,7 @@
   "ConversationContinuityModeInfo3": "gpt-4o, gpt-4-turbo, claude-3-opus, claude-3.5-sonnet work relatively stably.",
   "StatusOn": "Status: ON",
   "StatusOff": "Status: OFF",
-  "SelectAIService": "Select AI Service",
+  "SelectAIService": "Select AI Service (Comming soon)",
   "LocalLLM": "Local LLM",
   "SelectModel": "Select Model",
   "OpenAIAPIKeyLabel": "OpenAI API Key",
@@ -20,7 +20,7 @@
   "GroqAPIKeyLabel": "Groq API Key",
   "DifyAPIKeyLabel": "Dify API Key",
   "APIKeyInstruction": "You can obtain the API key below. Enter the obtained API key into the form.",
-  "ChatGPTInfo": "ChatGPT API is accessed directly from the browser.",
+  "ChatGPTInfo": "ChatGPT API is accessed directly from the browser.API selection functionality other than OpenAI will be released soon.",
   "LocalLLMInfo": "Local LLM server must be running. Setup is as follows.",
   "LocalLLMInfo2": "Please enter the URL of the local LLM server (including port number) and the model name.",
   "GroqInfo": "Groq API is accessed directly from the browser.",
@@ -99,5 +99,7 @@
   "Sign Up with Email & Password": "Sign Up with Email & Password",
   "Passwords do not match": "Passwords do not match",
   "Confirm Password": "Confirm Password",
-  "Already have an account?": "Already have an account?"
+  "Already have an account?": "Already have an account?",
+  "UserName": "User Name",
+  "User survey": "User survey"
 }

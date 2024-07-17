@@ -207,8 +207,8 @@ export const Settings = ({
   // オブジェクトを定義して、各AIサービスのデフォルトモデルを保存する
   // ローカルLLMが選択された場合、AIモデルを空文字に設定
   const defaultModels = {
-    openai: 'gpt-3.5-turbo',
-    anthropic: 'claude-3-haiku-20240307',
+    openai: 'gpt-4o',
+    anthropic: 'claude-3-5-sonnet-20240620',
     google: 'gemini-1.5-pro',
     groq: 'gemma-7b-it',
     localLlm: '',
@@ -305,6 +305,19 @@ export const Settings = ({
               </TextButton>
             </div>
           </div>
+          {/* UserNameの設定 */}
+          <div className="my-40">
+            <div className="my-16 typography-20 font-bold">{t("UserName")}
+            </div>
+            <div className="my-8">
+              <input
+                className="px-16 py-8 bg-surface1 hover:bg-surface1-hover rounded-8"
+                type="text"
+                value={userName}
+                onChange={onChangeUserName}
+              />
+            </div>
+          </div>
           {/* VRMと背景画像の設定 */}
           <div className="my-40">
             <div className="my-16 typography-20 font-bold">
@@ -320,18 +333,7 @@ export const Settings = ({
               <TextButton onClick={onClickOpenBgFile}>{t('ChangeBackgroundImage')}</TextButton>
             </div>
           </div>
-          {/* UserNameの設定 */}
-          <div className="my-40">
-            <div className="my-16 typography-20 font-bold">{t("UserName")}</div>
-            <div className="my-8">
-              <input
-                className="px-16 py-8 bg-surface1 hover:bg-surface1-hover rounded-8"
-                type="text"
-                value={userName}
-                onChange={onChangeUserName}
-              />
-            </div>
-          </div>
+          
           {/* 外部接続モード */}
           {/* <div className="my-40">
             <div className="my-16 typography-20 font-bold">
@@ -370,8 +372,8 @@ export const Settings = ({
                         }}
                       >
                         <option value="openai">OpenAI</option>
-                        <option value="anthropic">Anthropic</option>
-                        {/* <option value="google">Google Gemini</option>
+                        {/* <option value="anthropic">Anthropic</option>
+                        <option value="google">Google Gemini</option>
                         <option value="groq">Groq</option>
                         <option value="localLlm">{t('LocalLLM')}</option>
                         <option value="dify">Dify</option> */}
@@ -653,10 +655,10 @@ export const Settings = ({
                 className="px-16 py-8 bg-surface1 hover:bg-surface1-hover rounded-8"
               >
                 <option value="voicevox">{t('UsingVoiceVox')}</option>
-                <option value="koeiromap">{t('UsingKoeiromap')}</option>
+                {/* <option value="koeiromap">{t('UsingKoeiromap')}</option> */}
                 <option value="google">{t('UsingGoogleTTS')}</option>
-                <option value="stylebertvits2">{t('UsingStyleBertVITS2')}</option>
-                <option value="gsvitts">{t('UsingGSVITTS')}</option>
+                {/* <option value="stylebertvits2">{t('UsingStyleBertVITS2')}</option>
+                <option value="gsvitts">{t('UsingGSVITTS')}</option> */}
               </select>
             </div>
             <div className="my-40">
@@ -769,11 +771,11 @@ export const Settings = ({
                       <>
                         <div>
                           {t('GoogleTTSInfo')}
-                          {t('AuthFileInstruction')}<br />
+                          {/* {t('AuthFileInstruction')}<br />
                           <Link
                             url="https://developers.google.com/workspace/guides/create-credentials?#create_credentials_for_a_service_account"
                             label="https://developers.google.com/workspace/guides/create-credentials?#create_credentials_for_a_service_account" />
-                          <br /><br />
+                          <br /><br /> */}
                           {t('LanguageModelURL')}<br />
                           <Link
                             url="https://cloud.google.com/text-to-speech/docs/voices"

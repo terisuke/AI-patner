@@ -8,8 +8,7 @@
     ],
     "rewrites": [
       {
-        "source": "**",
-        "destination": "/index.html",
+        "source": "/api/tts",
         "function": "googleTtsFunction"
       }
     ]

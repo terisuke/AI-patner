@@ -1,8 +1,11 @@
 import Image from 'next/image';
 import { buildUrl } from "@/utils/buildUrl";
 import React from 'react';
+import { useTranslation } from 'react-i18next';
+
 
 export const GitHubLink = () => {
+  const { t } = useTranslation();
   return (
     <div className="absolute right-0 z-10 m-24">
       <a
@@ -18,7 +21,7 @@ export const GitHubLink = () => {
             width={24}
             src={buildUrl("/アンケートシートの無料アイコン.svg")}
           />
-          <div className="mx-4 text-white font-bold">ユーザーアンケート</div>
+          <div className="mx-4 text-white font-bold">{t('User survey')}</div>
         </div>
       </a>
     </div>

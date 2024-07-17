@@ -31,7 +31,7 @@ export async function synthesizeVoiceApi(
     type: "koeiromap",
   };
 
-  const res = await fetch("/api/tts", {
+  const res = await fetch("/api/tts/", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
