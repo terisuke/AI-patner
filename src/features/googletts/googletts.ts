@@ -1,26 +1,17 @@
-export async function googleTts(
-  message: string,
-  ttsType: string
-) {
+import * as textToSpeech from '@google-cloud/text-to-speech';
+
+export async function googleTts(message: string, ttsType: string) {
   try {
-  // Imports the Google Cloud client library
-  const textToSpeech = require('@google-cloud/text-to-speech');
-  // Creates a client
-  const client = new textToSpeech.TextToSpeechClient();
+    const client = new textToSpeech.TextToSpeechClient();
 
-  // Construct the request
-  const request = {
-    input: {text: message},
-    // Select the language and SSML voice gender (optional)
-    voice: {languageCode: 'en-US', name: ttsType, ssmlGender: 'FEMALE'},
-    // select the type of audio encoding
-    audioConfig: {audioEncoding: 'LINEAR16'},
-  };
+    const request = {
+      input: { text: message },
+      voice: { languageCode: 'en-US', name: ttsType, ssmlGender: 'FEMALE' },
+      audioConfig: { audioEncoding: 'LINEAR16' },
+    };
 
-  // Performs the text-to-speech request
-  const [response] = await client.synthesizeSpeech(request);
-
-  return { audio: response.audioContent };
+    const [response] = await client.synthesizeSpeech(request as textToSpeech.protos.google.cloud.texttospeech.v1.ISynthesizeSpeechRequest);
+    return { audio: response.audioContent };
   } catch (error) {
     console.error('Error during TTS request:', error);
     throw new Error('TTS request failed');
