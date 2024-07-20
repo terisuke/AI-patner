@@ -101,5 +101,9 @@
   "Already have an account?": "이미 계정이 있으신가요?",
   "UserName": "사용자 이름",
   "User survey": "사용자 설문조사",
-  "Initial settings": "초기 설정"
+  "Initial settings": "초기 설정",
+  "SelectType":"캐릭터 타입 선택",
+  "Female":"여성",
+  "Male":"남성",
+  "Dog":"개"
 }

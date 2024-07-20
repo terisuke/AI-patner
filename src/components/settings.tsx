@@ -1,12 +1,11 @@
-import i18n from "i18next";
-import React, { useEffect,useCallback } from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 import {
-    KoeiroParam,
-    PRESET_A,
-    PRESET_B,
-    PRESET_C,
-    PRESET_D,
+  KoeiroParam,
+  PRESET_A,
+  PRESET_B,
+  PRESET_C,
+  PRESET_D,
 } from "../features/constants/koeiroParam";
 import { SYSTEM_PROMPT, SYSTEM_PROMPT_B, SYSTEM_PROMPT_C } from "../features/constants/systemPromptConstants";
 import { Message } from "../features/messages/messages";
@@ -97,7 +96,12 @@ type Props = {
   showCharacterName: boolean;
   onChangeShowCharacterName: (show: boolean) => void;
   onChangeCharacterName: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  selectType: string;
+  setSelectType: (type: string) => void;
+  setVoicevoxSpeaker: (speaker: string) => void;
+  setGoogleTtsType: (type: string) => void;
 };
+
 export const Settings = ({
   selectAIService,
   onChangeAIService,
@@ -177,6 +181,10 @@ export const Settings = ({
   setCharacterName,
   showCharacterName,
   onChangeShowCharacterName,
+  selectType,
+  setSelectType,
+  setVoicevoxSpeaker,
+  setGoogleTtsType,
 }: Props) => {
   const { t } = useTranslation();
 
@@ -191,12 +199,33 @@ export const Settings = ({
     }
   }, [setSelectLanguage]);
 
+  // AIモデルを選択する関数
+  const handleSelectTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newType = e.target.value;
+    setSelectType(newType);
+    switch (newType) {
+      case "male":
+        setVoicevoxSpeaker("12");
+        setGoogleTtsType("en-US-Standard-D");
+        break;
+      case "dog":
+        setVoicevoxSpeaker("3");
+        setGoogleTtsType("ko-KR-Neural2-A");
+        break;
+      default:
+        setVoicevoxSpeaker("2");
+        setGoogleTtsType("en-US-Neural2-F");
+        break;
+    }
+  };
+
   // ユーザー名を更新する関数
   const onChangeUserName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newUserName = event.target.value;
     setUserName(newUserName);
     setSystemPrompt(SYSTEM_PROMPT(newUserName));
   };
+
   // オブジェクトを定義して、各AIサービスのデフォルトモデルを保存する
   // ローカルLLMが選択された場合、AIモデルを空文字に設定
   const defaultModels = {
@@ -226,8 +255,7 @@ export const Settings = ({
           <div className="my-24 typography-32 font-bold">{t('Settings')}</div>
           {/* UserNameの設定 */}
           <div className="my-40">
-            <div className="my-16 typography-20 font-bold">{t("UserName")}
-            </div>
+            <div className="my-16 typography-20 font-bold">{t("UserName")}</div>
             <div className="my-8">
               <input
                 className="px-16 py-8 bg-surface1 hover:bg-surface1-hover rounded-8"
@@ -237,15 +265,28 @@ export const Settings = ({
               />
             </div>
           </div>
+          {/* キャラクタータイプの設定 */}
+          <div className="my-24">
+            <div className="my-16 typography-20 font-bold">{t('SelectType')}</div>
+            <select
+              className="px-16 py-8 w-col-span-2 bg-surface1 hover:bg-surface1-hover rounded-8"
+              value={selectType}
+              onChange={handleSelectTypeChange}
+            >
+              <option value="main">{t('Female')}</option>
+              <option value="male">{t('Male')}</option>
+              <option value="dog">{t('Dog')}</option>
+            </select>
+          </div>
           {/*・キャラクター名の表示・非表示の設定*/}
-            <div className="my-16 typography-20 font-bold">
-              {t('ShowCharacterName')}
-            </div>
-            <div className="my-8">
-              <TextButton onClick={() => onChangeShowCharacterName(!showCharacterName)}>
-                {showCharacterName ? t('StatusOn') : t('StatusOff')}
-              </TextButton>
-            </div>
+          <div className="my-16 typography-20 font-bold">
+            {t('ShowCharacterName')}
+          </div>
+          <div className="my-8">
+            <TextButton onClick={() => onChangeShowCharacterName(!showCharacterName)}>
+              {showCharacterName ? t('StatusOn') : t('StatusOff')}
+            </TextButton>
+          </div>
           {/* VRMと背景画像の設定 */}
           <div className="my-40">
             <div className="my-16 typography-20 font-bold">
@@ -261,7 +302,6 @@ export const Settings = ({
               <TextButton onClick={onClickOpenBgFile}>{t('ChangeBackgroundImage')}</TextButton>
             </div>
           </div>
-          
           {/* 外部接続モード */}
           {/* <div className="my-40">
             <div className="my-16 typography-20 font-bold">
@@ -289,7 +329,7 @@ export const Settings = ({
                       {t('SelectAIService')}
                     </div>
                     <div className="my-8">
-                    <select
+                      <select
                         className="px-16 py-8 bg-surface1 hover:bg-surface1-hover rounded-8"
                         value={selectAIService}
                         onChange={(e) => {
@@ -306,7 +346,7 @@ export const Settings = ({
                         <option value="localLlm">{t('LocalLLM')}</option>
                         <option value="dify">Dify</option> */}
                       </select>
-                      </div>
+                    </div>
                     {(() => {
                       if (selectAIService === "openai") {
                         return (
@@ -371,8 +411,7 @@ export const Settings = ({
                             </div>
                           </div>
                         );
-                      }
-                      else if (selectAIService === "google") {
+                      } else if (selectAIService === "google") {
                         return (
                           <div className="my-24">
                             <div className="my-16 typography-20 font-bold">{t('GoogleAPIKeyLabel')}</div>
@@ -580,7 +619,10 @@ export const Settings = ({
             <div className="my-8">
               <select
                 value={selectVoice}
-                onChange={(e) => setSelectVoice(e.target.value)}
+                onChange={(e) => {
+                  setSelectVoice(e.target.value);
+                  console.log("Voice engine changed to:", e.target.value); // デバッグ用ログ
+                }}
                 className="px-16 py-8 bg-surface1 hover:bg-surface1-hover rounded-8"
               >
                 <option value="voicevox">{t('UsingVoiceVox')}</option>

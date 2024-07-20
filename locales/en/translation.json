@@ -102,5 +102,9 @@
   "Already have an account?": "Already have an account?",
   "UserName": "User Name",
   "User survey": "User survey",
-  "Initial settings": "Initial settings"
+  "Initial settings": "Initial settings",
+  "SelectType":"Select character type",
+  "Female":"Female",
+  "Male":"Male",
+  "Dog":"Dog"
 }

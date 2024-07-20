@@ -101,5 +101,9 @@
   "Already have an account?": "已有帳戶？",
   "UserName": "用戶名",
   "User survey": "用戶調查",
-  "Initial settings": "初始設定"
+  "Initial settings": "初始設定",
+  "SelectType":"選擇字元類型",
+  "Female":"女性",
+  "Male":"男性",
+  "Dog":"狗"
 }

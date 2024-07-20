@@ -103,5 +103,9 @@
   "Logout":"ログアウト",
   "UserName": "ユーザー名",
   "User survey": "ユーザーアンケート",
-  "Initial settings": "初期設定"
+  "Initial settings": "初期設定",
+  "SelectType": "キャラクタータイプを選択",
+  "Female": "女性",
+  "Male": "男性",
+  "Dog": "犬"
 }

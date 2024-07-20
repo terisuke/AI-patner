@@ -91,6 +91,10 @@ type Props = {
   userName: string;
   setUserName: (name: string) => void;
   setSystemPrompt: (prompt: string) => void;
+  selectType: string;
+  setSelectType: (type: string) => void;
+  setVoicevoxSpeaker: (speaker: string) => void;
+  setGoogleTtsType: (type: string) => void;
 };
 export const Menu = ({
   selectAIService,
@@ -171,6 +175,10 @@ export const Menu = ({
   showCharacterName,
   onChangeShowCharacterName,
   setSystemPrompt,
+  selectType,
+  setSelectType,
+  setVoicevoxSpeaker,
+  setGoogleTtsType,
 }: Props) => {
   const [showSettings, setShowSettings] = useState(false);
   const [showChatLog, setShowChatLog] = useState(false);
@@ -555,6 +563,10 @@ export const Menu = ({
           onChangeCharacterName={handleCharacterName}
           showCharacterName={showCharacterName}
           onChangeShowCharacterName={handleShowCharacterName}
+          selectType={selectType}
+          setSelectType={setSelectType}
+          setVoicevoxSpeaker={setVoicevoxSpeaker}
+          setGoogleTtsType={setGoogleTtsType}
         />
       )}
       {!showChatLog && assistantMessage && (
