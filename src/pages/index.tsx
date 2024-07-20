@@ -32,7 +32,7 @@ export default function Home() {
   const [userName, setUserName] = useState("きみ");
   const [systemPrompt, setSystemPrompt] = useState(() => SYSTEM_PROMPT("きみ","美穂"));
   const [selectAIService, setSelectAIService] = useState("openai");
-  const [selectAIModel, setSelectAIModel] = useState("gpt-3.5-turbo");
+  const [selectAIModel, setSelectAIModel] = useState("gpt-4o-mini");
   const [openAiKey, setOpenAiKey] = useState("");
   const [anthropicKey, setAnthropicKey] = useState("");
   const [googleKey, setGoogleKey] = useState("");
@@ -99,7 +99,7 @@ export default function Home() {
       setChatLog(Array.isArray(params.chatLog) ? params.chatLog : []);
       setCodeLog(Array.isArray(params.codeLog) ? params.codeLog : []);
       setSelectAIService(params.selectAIService || "openai");
-      setSelectAIModel(params.selectAIModel || "gpt-3.5-turbo");
+      setSelectAIModel(params.selectAIModel || "gpt-4o-mini");
       setOpenAiKey(params.openAiKey || "");
       setAnthropicKey(params.anthropicKey || "");
       setGoogleKey(params.googleKey || "");
