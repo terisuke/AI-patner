@@ -1,20 +1,20 @@
-import React, { useEffect } from "react";
-import { IconButton } from "./iconButton";
-import { TextButton } from "./textButton";
-import { Message } from "@/features/messages/messages";
-import { GitHubLink } from "./githubLink";
-import {
-  KoeiroParam,
-  PRESET_A,
-  PRESET_B,
-  PRESET_C,
-  PRESET_D,
-} from "@/features/constants/koeiroParam";
-import { Link } from "./link";
 import i18n from "i18next";
+import React, { useEffect } from "react";
 import { useTranslation } from 'react-i18next';
-import { SYSTEM_PROMPT } from "@/features/constants/systemPromptConstants";
+import {
+    KoeiroParam,
+    PRESET_A,
+    PRESET_B,
+    PRESET_C,
+    PRESET_D,
+} from "../features/constants/koeiroParam";
+import { SYSTEM_PROMPT } from "../features/constants/systemPromptConstants";
+import { Message } from "../features/messages/messages";
+import { GitHubLink } from "./githubLink";
+import { IconButton } from "./iconButton";
+import { Link } from "./link";
 import speakers from './speakers.json';
+import { TextButton } from "./textButton";
 
 type Props = {
   selectAIService: string;
@@ -207,7 +207,7 @@ export const Settings = ({
   // オブジェクトを定義して、各AIサービスのデフォルトモデルを保存する
   // ローカルLLMが選択された場合、AIモデルを空文字に設定
   const defaultModels = {
-    openai: 'gpt-4o',
+    openai: 'gpt-4o-mini',
     anthropic: 'claude-3-5-sonnet-20240620',
     google: 'gemini-1.5-pro',
     groq: 'gemma-7b-it',
@@ -405,6 +405,7 @@ export const Settings = ({
                                 value={selectAIModel}
                                 onChange={(e) => setSelectAIModel(e.target.value)}
                               >
+                                <option value="gpt-4o-mini">gpt-4o-mini</option>
                                 <option value="gpt-4o">gpt-4o</option>
                                 <option value="gpt-4-turbo">gpt-4-turbo</option>
                                 <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>

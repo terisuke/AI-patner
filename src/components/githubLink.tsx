@@ -1,7 +1,6 @@
 import Image from 'next/image';
-import { buildUrl } from "@/utils/buildUrl";
-import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { buildUrl } from "../utils/buildUrl";
 
 
 export const GitHubLink = () => {

@@ -1,16 +1,16 @@
-import { IconButton } from "./iconButton";
-import { Message } from "@/features/messages/messages";
-import { KoeiroParam } from "@/features/constants/koeiroParam";
+import LogoutIcon from '@mui/icons-material/Logout';
+import { getAuth, signOut } from "firebase/auth";
+import React, { useCallback, useContext, useRef, useState } from "react";
+import { useTranslation } from 'react-i18next';
+import { KoeiroParam } from "../features/constants/koeiroParam";
+import { Message } from "../features/messages/messages";
+import { testVoice } from "../features/messages/speakCharacter";
+import { ViewerContext } from "../features/vrmViewer/viewerContext";
+import { AssistantText } from "./assistantText";
 import { ChatLog } from "./chatLog";
 import { CodeLog } from "./codeLog";
-import React, { useCallback, useContext, useRef, useState } from "react";
+import { IconButton } from "./iconButton";
 import { Settings } from "./settings";
-import { ViewerContext } from "@/features/vrmViewer/viewerContext";
-import { AssistantText } from "./assistantText";
-import { useTranslation } from 'react-i18next';
-import { testVoice } from "@/features/messages/speakCharacter";
-import { getAuth, signOut } from "firebase/auth";
-import LogoutIcon from '@mui/icons-material/Logout';
 
 type Props = {
   selectAIService: string;

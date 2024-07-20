@@ -1,27 +1,26 @@
-import { useCallback, useContext, useEffect, useState, useRef } from "react";
-import VrmViewer from "@/components/vrmViewer";
-import { ViewerContext } from "@/features/vrmViewer/viewerContext";
-import {
-  Message,
-  textsToScreenplay,
-  Screenplay,
-} from "@/features/messages/messages";
-import { speakCharacter } from "@/features/messages/speakCharacter";
-import { MessageInputContainer } from "@/components/messageInputContainer";
-import { SYSTEM_PROMPT } from "@/features/constants/systemPromptConstants";
-import { KoeiroParam, DEFAULT_PARAM } from "@/features/constants/koeiroParam";
-import { AIService, AIServiceConfig, getAIChatResponseStream } from "@/features/chat/aiChatFactory";
-import { Introduction } from "@/components/introduction";
-import { Menu } from "@/components/menu";
-import { Meta } from "@/components/meta";
-import "@/lib/i18n";
-import { useTranslation } from 'react-i18next';
-import { fetchAndProcessComments } from "@/features/youtube/youtubeComments";
-import { buildUrl } from "@/utils/buildUrl";
 import { getAuth } from "firebase/auth";
-import usePreviousRoute from '@/components/usePreviousRoute';
-import { saveChatLog } from "@/lib/firebase";
-import React from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from 'react-i18next';
+import { Introduction } from "../components/introduction";
+import { Menu } from "../components/menu";
+import { MessageInputContainer } from "../components/messageInputContainer";
+import { Meta } from "../components/meta";
+import usePreviousRoute from '../components/usePreviousRoute';
+import VrmViewer from "../components/vrmViewer";
+import { AIService, AIServiceConfig, getAIChatResponseStream } from "../features/chat/aiChatFactory";
+import { DEFAULT_PARAM, KoeiroParam } from "../features/constants/koeiroParam";
+import { SYSTEM_PROMPT } from "../features/constants/systemPromptConstants";
+import {
+    Message,
+    Screenplay,
+    textsToScreenplay,
+} from "../features/messages/messages";
+import { speakCharacter } from "../features/messages/speakCharacter";
+import { ViewerContext } from "../features/vrmViewer/viewerContext";
+import { fetchAndProcessComments } from "../features/youtube/youtubeComments";
+import { saveChatLog } from "../lib/firebase";
+import "../lib/i18n";
+import { buildUrl } from "../utils/buildUrl";
 
 export default function Home() {
   const { viewer } = useContext(ViewerContext);

@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions';
-import { googleTts } from '../../src/features/googletts/googletts';
+import { googleTts } from '../../src-shared/features/googletts/googletts';
 
 export const googleTtsFunction = functions.https.onRequest(async (req, res) => {
   // CORSヘッダーを設定

@@ -1,6 +1,6 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import { Anthropic } from "@anthropic-ai/sdk";
-import { Message } from "@/features/messages/messages";
+import { NextApiRequest, NextApiResponse } from "next";
+import { Message } from "../../features/messages/messages";
 
 export default async function handler(
   req: NextApiRequest,

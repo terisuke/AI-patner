@@ -1,6 +1,6 @@
-import { useContext, useCallback } from "react";
+import { useCallback, useContext } from "react";
 import { ViewerContext } from "../features/vrmViewer/viewerContext";
-import { buildUrl } from "@/utils/buildUrl";
+import { buildUrl } from "../utils/buildUrl";
 
 export default function VrmViewer() {
   const { viewer } = useContext(ViewerContext);
@@ -9,7 +9,11 @@ export default function VrmViewer() {
     (canvas: HTMLCanvasElement) => {
       if (canvas) {
         viewer.setup(canvas);
-        viewer.loadVrm(buildUrl("/AvatarSample_B.vrm"));
+        if (process.env.NEXT_PUBLIC_AVATAR === "main") {
+          viewer.loadVrm(buildUrl("/AvatarSample_B.vrm"));
+        } else if (process.env.NEXT_PUBLIC_AVATAR === "male") {
+          viewer.loadVrm(buildUrl("/AvatarSample_A.vrm"));
+        }
 
         // Drag and DropでVRMを差し替え
         canvas.addEventListener("dragover", function (event) {

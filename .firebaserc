@@ -1,5 +1,24 @@
 {
   "projects": {
-    "default": "aipartner-426616"
-  }
+    "default": "aipartner-426616",
+    "male": "aipartner-426616",
+    "dog": "aipartner-426616"
+  },
+  "targets": {
+    "aipartner-426616": {
+      "hosting": {
+        "main": [
+          "aipartner-426616"
+        ],
+        "male": [
+          "aipartner-426616-male"
+        ],
+        "dog": [
+          "aipartner-426616-dog"
+        ]
+      }
+    }
+  },
+  "etags": {},
+  "dataconnectEmulatorConfig": {}
 }
