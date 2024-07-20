@@ -5,6 +5,7 @@ import { buildUrl } from "../utils/buildUrl";
 export default function VrmViewer() {
   const { viewer } = useContext(ViewerContext);
 
+  //ここでVRMを読み込む
   const canvasRef = useCallback(
     (canvas: HTMLCanvasElement) => {
       if (canvas) {
@@ -13,6 +14,10 @@ export default function VrmViewer() {
           viewer.loadVrm(buildUrl("/AvatarSample_B.vrm"));
         } else if (process.env.NEXT_PUBLIC_AVATAR === "male") {
           viewer.loadVrm(buildUrl("/AvatarSample_A.vrm"));
+        }else if (process.env.NEXT_PUBLIC_AVATAR === "dog") {
+          viewer.loadVrm(buildUrl("/AvatarSample_C.vrm"));
+        } else {
+          viewer.loadVrm(buildUrl("/AvatarSample_B.vrm"));
         }
 
         // Drag and DropでVRMを差し替え

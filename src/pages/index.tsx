@@ -9,7 +9,7 @@ import usePreviousRoute from '../components/usePreviousRoute';
 import VrmViewer from "../components/vrmViewer";
 import { AIService, AIServiceConfig, getAIChatResponseStream } from "../features/chat/aiChatFactory";
 import { DEFAULT_PARAM, KoeiroParam } from "../features/constants/koeiroParam";
-import { SYSTEM_PROMPT } from "../features/constants/systemPromptConstants";
+import { SYSTEM_PROMPT, SYSTEM_PROMPT_B,SYSTEM_PROMPT_C } from "../features/constants/systemPromptConstants";
 import {
     Message,
     Screenplay,
@@ -740,6 +740,14 @@ export default function Home() {
             setSelectLanguage={setSelectLanguage}
             setSelectVoiceLanguage={setSelectVoiceLanguage}
             onIntroductionClosed={handleIntroductionClosed}
+            systemPrompt={systemPrompt}
+            setSystemPrompt={setSystemPrompt}
+            characterName={characterName}
+            setCharacterName={setCharacterName}
+            onChangeCharacterName={(event) => setCharacterName(event.target.value)}
+            selectVoice={selectVoice}
+            setSelectVoice={setSelectVoice}
+            
           />
         )}
         <VrmViewer />

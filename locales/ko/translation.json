@@ -100,5 +100,6 @@
   "Passwords do not match": "비밀번호가 일치하지 않습니다",
   "Already have an account?": "이미 계정이 있으신가요?",
   "UserName": "사용자 이름",
-  "User survey": "사용자 설문조사"
+  "User survey": "사용자 설문조사",
+  "Initial settings": "초기 설정"
 }

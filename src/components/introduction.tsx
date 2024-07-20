@@ -3,6 +3,7 @@ import { Link } from "./link";
 import { IconButton } from "./iconButton";
 import i18n from "i18next";
 import { useTranslation, Trans } from 'react-i18next';
+import { SYSTEM_PROMPT, SYSTEM_PROMPT_B, SYSTEM_PROMPT_C } from "../features/constants/systemPromptConstants";
 
 type Props = {
   dontShowIntroduction: boolean;
@@ -11,15 +12,27 @@ type Props = {
   setSelectLanguage: (show: string) => void;
   setSelectVoiceLanguage: (show: string) => void;
   onIntroductionClosed: () => void; // 追加
+  systemPrompt: string;
+  setSystemPrompt: (prompt: string) => void;
+  characterName: string;
+  setCharacterName: (name: string) => void;
+  onChangeCharacterName: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  selectVoice: string;
+  setSelectVoice: (show: string) => void;
 };
 
 export const Introduction = ({
-  dontShowIntroduction,
-  onChangeDontShowIntroduction,
+  // dontShowIntroduction,
+  // onChangeDontShowIntroduction,
   selectLanguage,
   setSelectLanguage,
   setSelectVoiceLanguage,
-  onIntroductionClosed, // 追加
+  onIntroductionClosed,// 追加
+  characterName,
+  setCharacterName,
+  setSystemPrompt,
+  selectVoice,
+  setSelectVoice,
 }: Props) => {
   const [opened, setOpened] = useState(true);
 
@@ -31,7 +44,24 @@ export const Introduction = ({
   //   [onChangeDontShowIntroduction]
   // );
 
+  // キャラクター名を更新する関数
+  const onChangeCharacterName = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newCharacterName = event.target.value;
+    setCharacterName(newCharacterName);
+    setSystemPrompt(SYSTEM_PROMPT(newCharacterName));
+  };
+
   const { t } = useTranslation();
+
+    useEffect(() => {
+    const storedData = window.localStorage.getItem('chatVRMParams');
+    if (storedData) {
+      const params = JSON.parse(storedData);
+      if (params.selectLanguage) {
+        setSelectLanguage(params.selectLanguage);
+      }
+    }
+  }, [setSelectLanguage]);
 
   const updateLanguage = () => {
     let languageCode = i18n.language.toUpperCase();
@@ -144,7 +174,75 @@ export const Introduction = ({
             <span>{t('DontShowIntroductionNextTime')}</span>
           </label>
         </div> */}
-
+        <div className="my-8 font-bold typography-20 text-secondary ">
+          {t('Initial settings')}
+        </div>
+          {/* キャラクター名の設定 */}
+          <div className="my-40">
+            <div className="my-16 typography-20 font-bold">
+              {t('CharacterName')}
+            </div>
+            <input
+              className="text-ellipsis px-16 py-8 w-col-span-2 bg-surface3 hover:bg-surface3-hover rounded-8"
+              type="text"
+              placeholder={t('CharacterName')}
+              value={characterName}
+              onChange={onChangeCharacterName}
+            />
+          </div>
+          {/* 言語設定 */}
+          <div className="my-40">
+            <div className="my-16 typography-20 font-bold">
+              {t('Language')}
+            </div>
+            <div className="my-8">
+              <select
+                className="px-16 py-8 bg-surface3 hover:bg-surface3-hover rounded-8"
+                value={selectLanguage}
+                onChange={(e) => {
+                  const newLanguage = e.target.value;
+                  switch (newLanguage) {
+                    case "JP":
+                      setSelectLanguage("JP");
+                      setSelectVoiceLanguage("ja-JP");
+                      i18n.changeLanguage('ja');
+                      break;
+                    case "EN":
+                      setSelectLanguage("EN");
+                      if (selectVoice === "voicevox" || selectVoice === "koeiromap") {
+                        setSelectVoice("google");
+                      }
+                      setSelectVoiceLanguage("en-US");
+                      i18n.changeLanguage('en');
+                      break;
+                    case "ZH":
+                      setSelectLanguage("ZH");
+                      if (selectVoice === "voicevox" || selectVoice === "koeiromap") {
+                        setSelectVoice("google");
+                      }
+                      setSelectVoiceLanguage("zh-TW");
+                      i18n.changeLanguage('zh-TW');
+                      break;
+                    case "KO":
+                      setSelectLanguage("KO");
+                      if (selectVoice === "voicevox" || selectVoice === "koeiromap") {
+                        setSelectVoice("google");
+                      }
+                      setSelectVoiceLanguage("ko-KR");
+                      i18n.changeLanguage('ko');
+                      break;
+                    default:
+                      break;  // Optionally handle unexpected values
+                  }
+                }}
+              >
+                <option value="JP">日本語 - Japanese</option>
+                <option value="EN">英語 - English</option>
+                <option value="ZH">繁體中文 - Traditional Chinese</option>
+                <option value="KO">韓語 - Korean</option>
+              </select>
+            </div>
+          </div>
         <div className="my-24">
           <button
             onClick={() => {
@@ -156,12 +254,6 @@ export const Introduction = ({
            {t('Close')}
           </button>
         </div>
-
-        {selectLanguage === 'JP' && (
-          <div className="my-24">
-            <p>You can select the language from the settings. English,Traditional Chinese and Korean are available.</p>
-          </div>
-        )}
       </div>
     </div>
   ) : null;
