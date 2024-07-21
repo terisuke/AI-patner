@@ -71,7 +71,7 @@ export const textsToScreenplay = (
       },
     });
   }
-
+//マルチスレッディングのできる言語に切り替える？
   return screenplays;
 };
 

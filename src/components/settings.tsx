@@ -210,7 +210,7 @@ export const Settings = ({
         break;
       case "dog":
         setVoicevoxSpeaker("3");
-        setGoogleTtsType("ko-KR-Neural2-A");
+        setGoogleTtsType("en-IN-Wavenet-A");
         break;
       default:
         setVoicevoxSpeaker("2");

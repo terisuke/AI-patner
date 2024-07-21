@@ -121,7 +121,7 @@ export const Introduction = ({
         setSystemPrompt(SYSTEM_PROMPT_C("きみ", "ポチ"));
         setCharacterName("ポチ");
         setVoicevoxSpeaker("3");
-        setGoogleTtsType("ko-KR-Neural2-A");
+        setGoogleTtsType("en-IN-Wavenet-A");
         break;
       default:
         setSystemPrompt(SYSTEM_PROMPT("きみ", "美穂"));

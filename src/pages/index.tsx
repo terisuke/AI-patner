@@ -623,7 +623,7 @@ const handleIntroductionClosed = useCallback(() => {
           case "dog":
             prompt = SYSTEM_PROMPT_C("きみ", "ポチ");
             setVoicevoxSpeaker("3");
-            setGoogleTtsType("ko-KR-Neural2-A");
+            setGoogleTtsType("en-IN-Wavenet-A");
             break;
           default:
             prompt = SYSTEM_PROMPT("きみ", "美穂");
