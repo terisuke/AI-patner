@@ -1,20 +1,20 @@
+import i18n from "@/lib/i18n";
 import React, { useEffect } from "react";
-import { IconButton } from "./iconButton";
-import { TextButton } from "./textButton";
-import { Message } from "@/features/messages/messages";
-import { GitHubLink } from "./githubLink";
+import { useTranslation } from 'react-i18next';
 import {
   KoeiroParam,
   PRESET_A,
   PRESET_B,
   PRESET_C,
   PRESET_D,
-} from "@/features/constants/koeiroParam";
+} from "../features/constants/koeiroParam";
+import { SYSTEM_PROMPT, SYSTEM_PROMPT_B, SYSTEM_PROMPT_C } from "../features/constants/systemPromptConstants";
+import { Message } from "../features/messages/messages";
+import { GitHubLink } from "./githubLink";
+import { IconButton } from "./iconButton";
 import { Link } from "./link";
-import i18n from "i18next";
-import { useTranslation } from 'react-i18next';
-import { SYSTEM_PROMPT } from "@/features/constants/systemPromptConstants";
 import speakers from './speakers.json';
+import { TextButton } from "./textButton";
 
 type Props = {
   selectAIService: string;
@@ -94,10 +94,15 @@ type Props = {
   onChangeGSVITtsSpeechRate: (event: React.ChangeEvent<HTMLInputElement>) => void;
   characterName: string;
   setCharacterName: (name: string) => void;
-  onChangeCharacterName: (event: React.ChangeEvent<HTMLInputElement>) => void;
   showCharacterName: boolean;
   onChangeShowCharacterName: (show: boolean) => void;
+  onChangeCharacterName: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  selectType: string;
+  setSelectType: (type: string) => void;
+  setVoicevoxSpeaker: (speaker: string) => void;
+  setGoogleTtsType: (type: string) => void;
 };
+
 export const Settings = ({
   selectAIService,
   onChangeAIService,
@@ -177,6 +182,10 @@ export const Settings = ({
   setCharacterName,
   showCharacterName,
   onChangeShowCharacterName,
+  selectType,
+  setSelectType,
+  setVoicevoxSpeaker,
+  setGoogleTtsType,
 }: Props) => {
   const { t } = useTranslation();
 
@@ -191,23 +200,37 @@ export const Settings = ({
     }
   }, [setSelectLanguage]);
 
+  // AIモデルを選択する関数
+  const handleSelectTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newType = e.target.value;
+    setSelectType(newType);
+    switch (newType) {
+      case "male":
+        setVoicevoxSpeaker("12");
+        setGoogleTtsType("en-US-Standard-D");
+        break;
+      case "dog":
+        setVoicevoxSpeaker("3");
+        setGoogleTtsType("en-IN-Wavenet-A");
+        break;
+      default:
+        setVoicevoxSpeaker("2");
+        setGoogleTtsType("en-US-Neural2-F");
+        break;
+    }
+  };
+
   // ユーザー名を更新する関数
   const onChangeUserName = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newUserName = event.target.value;
     setUserName(newUserName);
     setSystemPrompt(SYSTEM_PROMPT(newUserName));
   };
-  // キャラクター名を更新する関数
-  const onChangeCharacterName = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newCharacterName = event.target.value;
-    setCharacterName(newCharacterName);
-    setSystemPrompt(SYSTEM_PROMPT(newCharacterName));
-  };
-  
+
   // オブジェクトを定義して、各AIサービスのデフォルトモデルを保存する
   // ローカルLLMが選択された場合、AIモデルを空文字に設定
   const defaultModels = {
-    openai: 'gpt-4o',
+    openai: 'gpt-4o-mini',
     anthropic: 'claude-3-5-sonnet-20240620',
     google: 'gemini-1.5-pro',
     groq: 'gemma-7b-it',
@@ -231,84 +254,9 @@ export const Settings = ({
       <div className="max-h-full overflow-auto">
         <div className="text-text1 max-w-3xl mx-auto px-24 py-64 ">
           <div className="my-24 typography-32 font-bold">{t('Settings')}</div>
-          {/* 言語設定 */}
-          <div className="my-40">
-            <div className="my-16 typography-20 font-bold">
-              {t('Language')}
-            </div>
-            <div className="my-8">
-              <select
-                className="px-16 py-8 bg-surface1 hover:bg-surface1-hover rounded-8"
-                value={selectLanguage}
-                onChange={(e) => {
-                  const newLanguage = e.target.value;
-                  switch (newLanguage) {
-                    case "JP":
-                      setSelectLanguage("JP");
-                      setSelectVoiceLanguage("ja-JP");
-                      i18n.changeLanguage('ja');
-                      break;
-                    case "EN":
-                      setSelectLanguage("EN");
-                      if (selectVoice === "voicevox" || selectVoice === "koeiromap") {
-                        setSelectVoice("google");
-                      }
-                      setSelectVoiceLanguage("en-US");
-                      i18n.changeLanguage('en');
-                      break;
-                    case "ZH":
-                      setSelectLanguage("ZH");
-                      if (selectVoice === "voicevox" || selectVoice === "koeiromap") {
-                        setSelectVoice("google");
-                      }
-                      setSelectVoiceLanguage("zh-TW");
-                      i18n.changeLanguage('zh-TW');
-                      break;
-                    case "KO":
-                      setSelectLanguage("KO");
-                      if (selectVoice === "voicevox" || selectVoice === "koeiromap") {
-                        setSelectVoice("google");
-                      }
-                      setSelectVoiceLanguage("ko-KR");
-                      i18n.changeLanguage('ko');
-                      break;
-                    default:
-                      break;  // Optionally handle unexpected values
-                  }
-                }}
-              >
-                <option value="JP">日本語 - Japanese</option>
-                <option value="EN">英語 - English</option>
-                <option value="ZH">繁體中文 - Traditional Chinese</option>
-                <option value="KO">韓語 - Korean</option>
-              </select>
-            </div>
-          </div>
-          {/* キャラクター名の設定 */}
-          <div className="my-40">
-            <div className="my-16 typography-20 font-bold">
-              {t('CharacterName')}
-            </div>
-            <input
-              className="text-ellipsis px-16 py-8 w-col-span-2 bg-surface1 hover:bg-surface1-hover rounded-8"
-              type="text"
-              placeholder={t('CharacterName')}
-              value={characterName}
-              onChange={onChangeCharacterName}
-            />
-            <div className="my-16 typography-20 font-bold">
-              {t('ShowCharacterName')}
-            </div>
-            <div className="my-8">
-              <TextButton onClick={() => onChangeShowCharacterName(!showCharacterName)}>
-                {showCharacterName ? t('StatusOn') : t('StatusOff')}
-              </TextButton>
-            </div>
-          </div>
           {/* UserNameの設定 */}
           <div className="my-40">
-            <div className="my-16 typography-20 font-bold">{t("UserName")}
-            </div>
+            <div className="my-16 typography-20 font-bold">{t("UserName")}</div>
             <div className="my-8">
               <input
                 className="px-16 py-8 bg-surface1 hover:bg-surface1-hover rounded-8"
@@ -317,6 +265,28 @@ export const Settings = ({
                 onChange={onChangeUserName}
               />
             </div>
+          </div>
+          {/* キャラクタータイプの設定 */}
+          <div className="my-24">
+            <div className="my-16 typography-20 font-bold">{t('SelectType')}</div>
+            <select
+              className="px-16 py-8 w-col-span-2 bg-surface1 hover:bg-surface1-hover rounded-8"
+              value={selectType}
+              onChange={handleSelectTypeChange}
+            >
+              <option value="main">{t('Female')}</option>
+              <option value="male">{t('Male')}</option>
+              <option value="dog">{t('Dog')}</option>
+            </select>
+          </div>
+          {/*・キャラクター名の表示・非表示の設定*/}
+          <div className="my-16 typography-20 font-bold">
+            {t('ShowCharacterName')}
+          </div>
+          <div className="my-8">
+            <TextButton onClick={() => onChangeShowCharacterName(!showCharacterName)}>
+              {showCharacterName ? t('StatusOn') : t('StatusOff')}
+            </TextButton>
           </div>
           {/* VRMと背景画像の設定 */}
           <div className="my-40">
@@ -333,7 +303,6 @@ export const Settings = ({
               <TextButton onClick={onClickOpenBgFile}>{t('ChangeBackgroundImage')}</TextButton>
             </div>
           </div>
-          
           {/* 外部接続モード */}
           {/* <div className="my-40">
             <div className="my-16 typography-20 font-bold">
@@ -361,7 +330,7 @@ export const Settings = ({
                       {t('SelectAIService')}
                     </div>
                     <div className="my-8">
-                    <select
+                      <select
                         className="px-16 py-8 bg-surface1 hover:bg-surface1-hover rounded-8"
                         value={selectAIService}
                         onChange={(e) => {
@@ -378,7 +347,7 @@ export const Settings = ({
                         <option value="localLlm">{t('LocalLLM')}</option>
                         <option value="dify">Dify</option> */}
                       </select>
-                      </div>
+                    </div>
                     {(() => {
                       if (selectAIService === "openai") {
                         return (
@@ -405,6 +374,7 @@ export const Settings = ({
                                 value={selectAIModel}
                                 onChange={(e) => setSelectAIModel(e.target.value)}
                               >
+                                <option value="gpt-4o-mini">gpt-4o-mini</option>
                                 <option value="gpt-4o">gpt-4o</option>
                                 <option value="gpt-4-turbo">gpt-4-turbo</option>
                                 <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
@@ -442,8 +412,7 @@ export const Settings = ({
                             </div>
                           </div>
                         );
-                      }
-                      else if (selectAIService === "google") {
+                      } else if (selectAIService === "google") {
                         return (
                           <div className="my-24">
                             <div className="my-16 typography-20 font-bold">{t('GoogleAPIKeyLabel')}</div>
@@ -644,6 +613,59 @@ export const Settings = ({
               )}
             })()
           }
+          {/* 言語設定 */}
+        <div className="my-40">
+          <div className="my-16 typography-20 font-bold">
+            {t('Language')}
+          </div>
+          <div className="my-8">
+            <select
+              className="px-16 py-8 bg-surface1 hover:bg-surface1-hover rounded-8"
+              value={selectLanguage}
+              onChange={(e) => {
+                const newLanguage = e.target.value;
+                switch (newLanguage) {
+                  case "JP":
+                    setSelectLanguage("JP");
+                    setSelectVoiceLanguage("ja-JP");
+                    i18n.changeLanguage('ja');
+                    break;
+                  case "EN":
+                    setSelectLanguage("EN");
+                    if (selectVoice === "voicevox" || selectVoice === "koeiromap") {
+                      setSelectVoice("google");
+                    }
+                    setSelectVoiceLanguage("en-US");
+                    i18n.changeLanguage('en');
+                    break;
+                  case "ZH":
+                    setSelectLanguage("ZH");
+                    if (selectVoice === "voicevox" || selectVoice === "koeiromap") {
+                      setSelectVoice("google");
+                    }
+                    setSelectVoiceLanguage("zh-TW");
+                    i18n.changeLanguage('zh-TW');
+                    break;
+                  case "KO":
+                    setSelectLanguage("KO");
+                    if (selectVoice === "voicevox" || selectVoice === "koeiromap") {
+                      setSelectVoice("google");
+                    }
+                    setSelectVoiceLanguage("ko-KR");
+                    i18n.changeLanguage('ko');
+                    break;
+                  default:
+                    break;  // Optionally handle unexpected values
+                }
+              }}
+            >
+              <option value="JP">日本語 - Japanese</option>
+              <option value="EN">英語 - English</option>
+              <option value="ZH">繁體中文 - Traditional Chinese</option>
+              <option value="KO">韓語 - Korean</option>
+            </select>
+          </div>
+        </div>
           {/* 音声エンジンの選択 */}
           <div className="my-40">
             <div className="my-16 typography-20 font-bold">{t('SyntheticVoiceEngineChoice')}</div>
@@ -651,7 +673,10 @@ export const Settings = ({
             <div className="my-8">
               <select
                 value={selectVoice}
-                onChange={(e) => setSelectVoice(e.target.value)}
+                onChange={(e) => {
+                  setSelectVoice(e.target.value);
+                  console.log("Voice engine changed to:", e.target.value); // デバッグ用ログ
+                }}
                 className="px-16 py-8 bg-surface1 hover:bg-surface1-hover rounded-8"
               >
                 <option value="voicevox">{t('UsingVoiceVox')}</option>

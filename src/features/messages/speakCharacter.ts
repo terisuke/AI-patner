@@ -1,10 +1,10 @@
-import { wait } from "@/utils/wait";
-import { synthesizeVoiceApi } from "./synthesizeVoice";
-import { synthesizeVoiceGoogleApi } from "./synthesizeVoiceGoogle";
-import { synthesizeStyleBertVITS2Api } from "./synthesizeStyleBertVITS2";
+import englishToJapanese from '@/utils/englishToJapanese.json';
+import { wait } from "../../utils/wait";
 import { Viewer } from "../vrmViewer/viewer";
 import { Screenplay, Talk } from "./messages";
-import englishToJapanese from '@/utils/englishToJapanese.json';
+import { synthesizeStyleBertVITS2Api } from "./synthesizeStyleBertVITS2";
+import { synthesizeVoiceApi } from "./synthesizeVoice";
+import { synthesizeVoiceGoogleApi } from "./synthesizeVoiceGoogle";
 
 interface EnglishToJapanese {
   [key: string]: string;

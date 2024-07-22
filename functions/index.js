@@ -1,5 +1,5 @@
 const functions = require('firebase-functions');
-const { googleTts } = require('.././src/features/googletts/googletts.ts');
+const { googleTts } = require('../src-main/features/googletts/googletts.ts');
 const { nanoid } = require('nanoid');
 
 exports.googleTtsFunction = functions.https.onRequest(async (req, res) => {

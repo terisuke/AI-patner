@@ -1,6 +1,6 @@
-import { Message } from "@/features/messages/messages";
-import { getOpenAIChatResponse } from "@/features/chat/openAiChat";
-import { getAnthropicChatResponse } from "@/features/chat/anthropicChat";
+import { getAnthropicChatResponse } from "../chat/anthropicChat";
+import { getOpenAIChatResponse } from "../chat/openAiChat";
+import { Message } from "../messages/messages";
 
 const fetchAIResponse = async (queryMessages: any[], aiApiKey: string, selectAIService: string, selectAIModel: string): Promise<any> => {
   if (selectAIService === "openai") {

@@ -1,27 +1,26 @@
-import { useCallback, useContext, useEffect, useState, useRef } from "react";
-import VrmViewer from "@/components/vrmViewer";
-import { ViewerContext } from "@/features/vrmViewer/viewerContext";
-import {
-  Message,
-  textsToScreenplay,
-  Screenplay,
-} from "@/features/messages/messages";
-import { speakCharacter } from "@/features/messages/speakCharacter";
-import { MessageInputContainer } from "@/components/messageInputContainer";
-import { SYSTEM_PROMPT } from "@/features/constants/systemPromptConstants";
-import { KoeiroParam, DEFAULT_PARAM } from "@/features/constants/koeiroParam";
-import { AIService, AIServiceConfig, getAIChatResponseStream } from "@/features/chat/aiChatFactory";
-import { Introduction } from "@/components/introduction";
-import { Menu } from "@/components/menu";
-import { Meta } from "@/components/meta";
-import "@/lib/i18n";
-import { useTranslation } from 'react-i18next';
-import { fetchAndProcessComments } from "@/features/youtube/youtubeComments";
-import { buildUrl } from "@/utils/buildUrl";
 import { getAuth } from "firebase/auth";
-import usePreviousRoute from '@/components/usePreviousRoute';
-import { saveChatLog } from "@/lib/firebase";
-import React from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from 'react-i18next';
+import { Introduction } from "../components/introduction";
+import { Menu } from "../components/menu";
+import { MessageInputContainer } from "../components/messageInputContainer";
+import { Meta } from "../components/meta";
+import usePreviousRoute from '../components/usePreviousRoute';
+import VrmViewer from "../components/vrmViewer";
+import { AIService, AIServiceConfig, getAIChatResponseStream } from "../features/chat/aiChatFactory";
+import { DEFAULT_PARAM, KoeiroParam } from "../features/constants/koeiroParam";
+import { SYSTEM_PROMPT, SYSTEM_PROMPT_B, SYSTEM_PROMPT_C } from "../features/constants/systemPromptConstants";
+import {
+    Message,
+    Screenplay,
+    textsToScreenplay,
+} from "../features/messages/messages";
+import { speakCharacter } from "../features/messages/speakCharacter";
+import { ViewerContext } from "../features/vrmViewer/viewerContext";
+import { fetchAndProcessComments } from "../features/youtube/youtubeComments";
+import { saveChatLog } from "../lib/firebase";
+import "../lib/i18n";
+import { buildUrl } from "../utils/buildUrl";
 
 export default function Home() {
   const { viewer } = useContext(ViewerContext);
@@ -33,7 +32,7 @@ export default function Home() {
   const [userName, setUserName] = useState("きみ");
   const [systemPrompt, setSystemPrompt] = useState(() => SYSTEM_PROMPT("きみ","美穂"));
   const [selectAIService, setSelectAIService] = useState("openai");
-  const [selectAIModel, setSelectAIModel] = useState("gpt-3.5-turbo");
+  const [selectAIModel, setSelectAIModel] = useState("gpt-4o-mini");
   const [openAiKey, setOpenAiKey] = useState("");
   const [anthropicKey, setAnthropicKey] = useState("");
   const [googleKey, setGoogleKey] = useState("");
@@ -80,6 +79,7 @@ export default function Home() {
   const [chatProcessingCount, setChatProcessingCount] = useState(0);
   const [characterName, setCharacterName] = useState("美穂");
   const [showCharacterName, setShowCharacterName] = useState(true);
+  const [selectType, setSelectType] = useState("main");
 
   const incrementChatProcessingCount = () => {
     setChatProcessingCount(prevCount => prevCount + 1);
@@ -99,7 +99,7 @@ export default function Home() {
       setChatLog(Array.isArray(params.chatLog) ? params.chatLog : []);
       setCodeLog(Array.isArray(params.codeLog) ? params.codeLog : []);
       setSelectAIService(params.selectAIService || "openai");
-      setSelectAIModel(params.selectAIModel || "gpt-3.5-turbo");
+      setSelectAIModel(params.selectAIModel || "gpt-4o-mini");
       setOpenAiKey(params.openAiKey || "");
       setAnthropicKey(params.anthropicKey || "");
       setGoogleKey(params.googleKey || "");
@@ -158,6 +158,7 @@ export default function Home() {
       selectVoice,
       selectLanguage,
       selectVoiceLanguage,
+      selectType,
       changeEnglishToJapanese,
       koeiromapKey,
       voicevoxSpeaker,
@@ -219,7 +220,8 @@ export default function Home() {
     gsviTtsBatchSize,
     gsviTtsSpeechRate,
     characterName,
-    showCharacterName
+    showCharacterName,
+    selectType
   ]);
 
   useEffect(() => {
@@ -605,22 +607,38 @@ export default function Home() {
   const [tmpMessages, setTmpMessages] = useState<tmpMessage[]>([]);
 
   // ユーザーがログインしたらファーストコメントを出力
-  const handleIntroductionClosed = useCallback(() => {
+const handleIntroductionClosed = useCallback(() => {
     const auth = getAuth();
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (user) {
         setUserId(user.uid);
 
+        let prompt;
+        switch (selectType) {
+          case "male":
+            prompt = SYSTEM_PROMPT_B("きみ", "健一");
+            setVoicevoxSpeaker("12");
+            setGoogleTtsType("en-US-Standard-D");
+            break;
+          case "dog":
+            prompt = SYSTEM_PROMPT_C("きみ", "ポチ");
+            setVoicevoxSpeaker("3");
+            setGoogleTtsType("en-IN-Wavenet-A");
+            break;
+          default:
+            prompt = SYSTEM_PROMPT("きみ", "美穂");
+            setVoicevoxSpeaker("2");
+            setGoogleTtsType("en-US-Neural2-F");
+            break;
+        }
+        setSystemPrompt(prompt);
+
         if (previousRoute === "/login") {
-          console.log("User logged in via login page, sending first chat message");
-          handleSendChat(`あなたは${characterName}という名前の女性パートナーです。おかえり、また来てくれてありがとう！から始まる文章を出力して、あなたから会話を開始してください。`
-          , "assistant");
+          handleSendChat(`あなたは${characterName}という名前の${selectType === "male" ? "男性" : selectType === "dog" ? "犬" : "女性"}パートナーです。おかえり、また来てくれてありがとう！から始まる文章を出力して、あなたから会話を開始してください。`, "assistant");
         } else if (previousRoute === "/signup") {
-          console.log("User logged in via signup page, sending first chat message");
-          handleSendChat(`あなたは${characterName}という名前の女性パートナーです。「こんにちは、私は${characterName}！あなたの名前は何ていうの？「〜だよ」って言う形で教えてね♪」という文章をそのまま出力して、あなたから会話を開始してください。`, "assistant");
+          handleSendChat(`あなたは${characterName}という名前の${selectType === "male" ? "男性" : selectType === "dog" ? "犬" : "女性"}パートナーです。「こんにちは、${selectType === "male" ? "僕" : "私は"}${characterName}！あなたの名前は何ていうの？「〜だよ」って言う形で教えてね♪」という文章をそのまま出力して、あなたから会話を開始してください。`, "assistant");
         } else {
-          console.log("Continuing the conversation as it is neither signup nor login");
-          handleSendChat(`あなたは${characterName}という名前の女性パートナーです。やっほー！前も来てくれたよね？から始まる文章を出力して、あなたから会話を開始してください。`, "assistant");
+          handleSendChat(`あなたは${characterName}という名前の${selectType === "male" ? "男性" : selectType === "dog" ? "犬" : "女性"}パートナーです。やっほー！前も来てくれたよね？から始まる文章を出力して、あなたから会話を開始してください。`, "assistant");
         }
       } else {
         setUserId(null);
@@ -628,8 +646,7 @@ export default function Home() {
     });
 
     return () => unsubscribe();
-  }, [previousRoute, characterName]);
-
+  }, [previousRoute, characterName, selectType]);
 
   useEffect(() => {
     const handleOpen = (event: Event) => {
@@ -741,9 +758,22 @@ export default function Home() {
             setSelectLanguage={setSelectLanguage}
             setSelectVoiceLanguage={setSelectVoiceLanguage}
             onIntroductionClosed={handleIntroductionClosed}
+            systemPrompt={systemPrompt}
+            setSystemPrompt={setSystemPrompt}
+            characterName={characterName}
+            setCharacterName={setCharacterName}
+            onChangeCharacterName={(event) => setCharacterName(event.target.value)}
+            selectVoice={selectVoice}
+            setSelectVoice={setSelectVoice}
+            selectType={selectType}
+            setSelectType={setSelectType}
+            voicevoxSpeaker={voicevoxSpeaker}
+            setVoicevoxSpeaker={setVoicevoxSpeaker} 
+            googleTtsType={googleTtsType}
+            setGoogleTtsType={setGoogleTtsType}
           />
         )}
-        <VrmViewer />
+        <VrmViewer  selectType={selectType} />
         <MessageInputContainer
           isChatProcessing={chatProcessing}
           onChatProcessStart={handleSendChat}
@@ -828,6 +858,10 @@ export default function Home() {
           characterName={characterName}
           setCharacterName={setCharacterName}
           onChangeCharacterName={setCharacterName}
+          selectType={selectType}
+          setSelectType={setSelectType}
+          setVoicevoxSpeaker={setVoicevoxSpeaker}
+          setGoogleTtsType={setGoogleTtsType}
         />
       </div>
     </>

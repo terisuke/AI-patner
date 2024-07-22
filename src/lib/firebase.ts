@@ -1,7 +1,7 @@
-import { initializeApp, getApps, FirebaseApp } from "firebase/app";
-import { getAuth, Auth } from "firebase/auth";
-import { getFirestore, Firestore, collection, addDoc, query, orderBy, limit, getDocs } from "firebase/firestore";
-import { Message } from "@/features/messages/messages";
+import { FirebaseApp, getApps, initializeApp } from "firebase/app";
+import { Auth, getAuth } from "firebase/auth";
+import { Firestore, addDoc, collection, getDocs, getFirestore, limit, orderBy, query } from "firebase/firestore";
+import { Message } from "../features/messages/messages";
 
 const firebaseConfig = {
   apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
@@ -65,4 +65,5 @@ const getChatLogs = async (userId: string, limitCount: number = 50): Promise<Mes
   return chatLogs.reverse();
 };
 
-export { auth, db, saveChatLog, getChatLogs };
+export { auth, db, getChatLogs, saveChatLog };
+

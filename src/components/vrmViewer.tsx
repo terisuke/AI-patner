@@ -1,17 +1,30 @@
-import { useContext, useCallback } from "react";
+import { useCallback, useContext } from "react";
 import { ViewerContext } from "../features/vrmViewer/viewerContext";
-import { buildUrl } from "@/utils/buildUrl";
+import { buildUrl } from "../utils/buildUrl";
 
-export default function VrmViewer() {
+type Props = {
+  selectType: string;
+};
+
+export default function VrmViewer({ selectType }: Props) {
   const { viewer } = useContext(ViewerContext);
 
   const canvasRef = useCallback(
     (canvas: HTMLCanvasElement) => {
       if (canvas) {
         viewer.setup(canvas);
-        viewer.loadVrm(buildUrl("/AvatarSample_B.vrm"));
+        switch (selectType) {
+          case "male":
+            viewer.loadVrm(buildUrl("/AvatarSample_A.vrm"));
+            break;
+          case "dog":
+            viewer.loadVrm(buildUrl("/AvatarSample_C.vrm"));
+            break;
+          default:
+            viewer.loadVrm(buildUrl("/AvatarSample_B.vrm"));
+            break;
+        }
 
-        // Drag and DropでVRMを差し替え
         canvas.addEventListener("dragover", function (event) {
           event.preventDefault();
         });
@@ -38,7 +51,7 @@ export default function VrmViewer() {
         });
       }
     },
-    [viewer]
+    [viewer, selectType]
   );
 
   return (

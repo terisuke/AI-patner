@@ -99,6 +99,12 @@
   "Forgot your password?": "��記密��？",
   "Passwords do not match": "密碼不匹配",
   "Already have an account?": "已有帳戶？",
+  "Logout": "登出",
   "UserName": "用戶名",
-  "User survey": "用戶調查"
+  "User survey": "用戶調查",
+  "Initial settings": "初始設定",
+  "SelectType":"選擇字元類型",
+  "Female":"女性",
+  "Male":"男性",
+  "Dog":"狗"
 }

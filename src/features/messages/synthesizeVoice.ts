@@ -1,6 +1,6 @@
-import { reduceTalkStyle } from "@/utils/reduceTalkStyle";
+import { reduceTalkStyle } from "../../utils/reduceTalkStyle";
 import { koeiromapV0 } from "../koeiromap/koeiromap";
-import { TalkStyle } from "../messages/messages";
+import { TalkStyle } from "./messages";
 
 export async function synthesizeVoice(
   message: string,

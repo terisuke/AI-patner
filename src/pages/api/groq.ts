@@ -1,6 +1,6 @@
-import { NextApiRequest, NextApiResponse } from "next";
 import Groq from "groq-sdk";
-import { Message } from "@/features/messages/messages";
+import { NextApiRequest, NextApiResponse } from "next";
+import { Message } from "../../features/messages/messages";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   const { messages, apiKey, model, stream } = req.body;

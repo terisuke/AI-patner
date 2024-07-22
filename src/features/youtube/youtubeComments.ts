@@ -1,12 +1,12 @@
-import { Message } from "@/features/messages/messages";
-import { 
-  getBestComment,
-  getMessagesForSleep,
-  getAnotherTopic,
-  getMessagesForNewTopic,
-  checkIfResponseContinuationIsRequired,
-  getMessagesForContinuation
-} from "@/features/youtube/conversationContinuityFunctions";
+import { Message } from "../messages/messages";
+import {
+    checkIfResponseContinuationIsRequired,
+    getAnotherTopic,
+    getBestComment,
+    getMessagesForContinuation,
+    getMessagesForNewTopic,
+    getMessagesForSleep
+} from "./conversationContinuityFunctions";
 
 export const getLiveChatId = async (liveId: string, youtubeKey: string): Promise<string> => {
   const params = {

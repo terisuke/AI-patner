@@ -1,5 +1,5 @@
-import { koeiromapFreeV1 } from "@/features/koeiromap/koeiromap";
-import { googleTts } from "@/features/googletts/googletts";
+import { koeiromapFreeV1 } from "../../features/koeiromap/koeiromap";
+import { googleTts } from "../../../src-shared/features/googletts/googletts";
 
 import type { NextApiRequest, NextApiResponse } from "next";
 

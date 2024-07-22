@@ -7,6 +7,8 @@
     "dev-https": "next dev --experimental-https",
     "build": "next build",
     "start": "next build && next start",
+    "start-male": "NEXT_PUBLIC_AVATAR=male next build && next start",
+    "start-dog": "NEXT_PUBLIC_AVATAR=dog next build && next start",
     "export": "next export",
     "lint": "next lint",
     "electron": "wait-on http://localhost:3000 && electron ./electron.mjs",

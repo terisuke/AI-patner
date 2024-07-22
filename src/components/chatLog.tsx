@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Message } from "@/features/messages/messages";
+import { Message } from "../features/messages/messages";
 
 type Props = {
   messages: Message[];

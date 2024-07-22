@@ -1,5 +1,5 @@
-import { MessageInput } from "@/components/messageInput";
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { MessageInput } from "./messageInput";
 
 type Props = {
   isChatProcessing: boolean;
