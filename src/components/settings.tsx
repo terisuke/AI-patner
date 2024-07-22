@@ -1,3 +1,4 @@
+import i18n from "@/lib/i18n";
 import React, { useEffect } from "react";
 import { useTranslation } from 'react-i18next';
 import {
@@ -612,6 +613,59 @@ export const Settings = ({
               )}
             })()
           }
+          {/* 言語設定 */}
+        <div className="my-40">
+          <div className="my-16 typography-20 font-bold">
+            {t('Language')}
+          </div>
+          <div className="my-8">
+            <select
+              className="px-16 py-8 bg-surface1 hover:bg-surface1-hover rounded-8"
+              value={selectLanguage}
+              onChange={(e) => {
+                const newLanguage = e.target.value;
+                switch (newLanguage) {
+                  case "JP":
+                    setSelectLanguage("JP");
+                    setSelectVoiceLanguage("ja-JP");
+                    i18n.changeLanguage('ja');
+                    break;
+                  case "EN":
+                    setSelectLanguage("EN");
+                    if (selectVoice === "voicevox" || selectVoice === "koeiromap") {
+                      setSelectVoice("google");
+                    }
+                    setSelectVoiceLanguage("en-US");
+                    i18n.changeLanguage('en');
+                    break;
+                  case "ZH":
+                    setSelectLanguage("ZH");
+                    if (selectVoice === "voicevox" || selectVoice === "koeiromap") {
+                      setSelectVoice("google");
+                    }
+                    setSelectVoiceLanguage("zh-TW");
+                    i18n.changeLanguage('zh-TW');
+                    break;
+                  case "KO":
+                    setSelectLanguage("KO");
+                    if (selectVoice === "voicevox" || selectVoice === "koeiromap") {
+                      setSelectVoice("google");
+                    }
+                    setSelectVoiceLanguage("ko-KR");
+                    i18n.changeLanguage('ko');
+                    break;
+                  default:
+                    break;  // Optionally handle unexpected values
+                }
+              }}
+            >
+              <option value="JP">日本語 - Japanese</option>
+              <option value="EN">英語 - English</option>
+              <option value="ZH">繁體中文 - Traditional Chinese</option>
+              <option value="KO">韓語 - Korean</option>
+            </select>
+          </div>
+        </div>
           {/* 音声エンジンの選択 */}
           <div className="my-40">
             <div className="my-16 typography-20 font-bold">{t('SyntheticVoiceEngineChoice')}</div>
