@@ -190,9 +190,9 @@ export const Menu = ({
   const handleChangeAIService = useCallback(
     (event: React.ChangeEvent<HTMLSelectElement>) => {
       onChangeAIService(event.target.value);
-      if (event.target.value !== "openai") {
-        onChangeConversationContinuityMode(false);
-      }
+      // if (event.target.value !== "openai") {
+      //   onChangeConversationContinuityMode(false);
+      // }
     },
     [onChangeAIService, onChangeConversationContinuityMode]
   );

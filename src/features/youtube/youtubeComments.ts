@@ -89,7 +89,9 @@ export const fetchAndProcessComments = async (
   setYoutubeSleepMode: (mode: boolean) => void,
   conversationContinuityMode: boolean,
   handleSendChat: (text: string, role?: string) => void,
-  preProcessAIResponse: (messages: Message[]) => void
+  preProcessAIResponse: (messages: Message[]) => void,
+  characterName: string,
+  selectType: string
 ): Promise<void> => {
   try {
     const liveChatId = await getLiveChatId(liveId, youtubeKey);
@@ -97,9 +99,9 @@ export const fetchAndProcessComments = async (
     if (liveChatId) {
       // 会話の継続が必要かどうかを確認
       if (!youtubeSleepMode && youtubeContinuationCount < 1 && conversationContinuityMode) {
-        const isContinuationNeeded = await checkIfResponseContinuationIsRequired(messages, aiApiKey, selectAIService, selectAIModel);
+        const isContinuationNeeded = await checkIfResponseContinuationIsRequired(messages, aiApiKey, selectAIService, selectAIModel, systemPrompt);
         if (isContinuationNeeded) {
-          const continuationMessage = await getMessagesForContinuation(systemPrompt, messages);
+          const continuationMessage = await getMessagesForContinuation(systemPrompt, messages, characterName, selectType);
           preProcessAIResponse(continuationMessage);
           setYoutubeContinuationCount(youtubeContinuationCount + 1);
           if (youtubeNoCommentCount < 1) {
@@ -119,7 +121,7 @@ export const fetchAndProcessComments = async (
         let selectedComment = "";
         if (conversationContinuityMode) {
           if (youtubeComments.length > 1) {
-            selectedComment = await getBestComment(messages, youtubeComments, aiApiKey, selectAIService, selectAIModel);
+            selectedComment = await getBestComment(messages, youtubeComments, aiApiKey, selectAIService, selectAIModel, systemPrompt);
           } else {
             selectedComment = youtubeComments[0].userComment;
           }
@@ -134,11 +136,11 @@ export const fetchAndProcessComments = async (
         if (conversationContinuityMode) {
           if (noCommentCount < 3 || 3 < noCommentCount && noCommentCount < 6) {
             // 会話の続きを生成
-            const continuationMessage = await getMessagesForContinuation(systemPrompt, messages);
+            const continuationMessage = await getMessagesForContinuation(systemPrompt, messages, characterName, selectType);
             preProcessAIResponse(continuationMessage);
           } else if (noCommentCount === 3) {
             // 新しいトピックを生成
-            const anotherTopic = await getAnotherTopic(messages, aiApiKey, selectAIService, selectAIModel);
+            const anotherTopic = await getAnotherTopic(messages, aiApiKey, selectAIService, selectAIModel, systemPrompt);
             console.log("anotherTopic:", anotherTopic);
             const newTopicMessage = await getMessagesForNewTopic(systemPrompt, messages, anotherTopic);
             preProcessAIResponse(newTopicMessage);

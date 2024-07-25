@@ -925,6 +925,26 @@ export const Settings = ({
               </div>
             )}
           </div>
+          {/*自動応答モード*/}
+          <div className="my-16 typography-20 font-bold">
+            {t('ConversationContinuityMode')}
+          </div>
+          <div className="my-8">{t('ConversationContinuityModeInfo')}</div>
+          <div className="my-8">{t('ConversationContinuityModeInfo2')}</div>
+          <div className="my-8">{t('ConversationContinuityModeInfo3')}</div>
+          {conversationContinuityMode ? (
+            <TextButton
+              onClick={() => onChangeConversationContinuityMode(false)}
+              disabled={selectAIService !== "openai" && selectAIService !== "anthropic"}>
+              {t('StatusOn')}
+            </TextButton>
+          ) : (
+            <TextButton
+              onClick={() => onChangeConversationContinuityMode(true)}
+              disabled={selectAIService !== "openai" && selectAIService !== "anthropic"}>
+              {t('StatusOff')}
+            </TextButton>
+          )}
           {/* チャットログの設定 */}
           <div className="my-40">
             <div className="my-8 grid-cols-2">

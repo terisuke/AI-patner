@@ -1,6 +1,6 @@
 import { Message } from "../messages/messages";
 
-export async function getAnthropicChatResponse(messages: Message[], apiKey: string, model: string) {
+export async function getAnthropicChatResponse(messages: Message[], apiKey: string, model: string, systemPrompt: string) {
   const response = await fetch("/api/anthropic/", {
     method: "POST",
     headers: {

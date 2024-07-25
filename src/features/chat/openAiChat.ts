@@ -2,7 +2,7 @@ import { OpenAI } from "openai";
 import { Message } from "../messages/messages";
 import { ChatCompletionMessageParam } from "openai/resources";
 
-export async function getOpenAIChatResponse(messages: Message[], apiKey: string, model: string) {
+export async function getOpenAIChatResponse(messages: Message[], apiKey: string, model: string, systemPrompt: string) {
   if (!apiKey) {
     throw new Error("Invalid API Key");
   }

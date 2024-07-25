@@ -21,6 +21,7 @@ import { fetchAndProcessComments } from "../features/youtube/youtubeComments";
 import { saveChatLog } from "../lib/firebase";
 import "../lib/i18n";
 import { buildUrl } from "../utils/buildUrl";
+import { getMessagesForContinuation } from "../features/youtube/conversationContinuityFunctions";
 
 export default function Home() {
   const { viewer } = useContext(ViewerContext);
@@ -54,7 +55,7 @@ export default function Home() {
   const [youtubeMode, setYoutubeMode] = useState(false);
   const [youtubeApiKey, setYoutubeApiKey] = useState("");
   const [youtubeLiveId, setYoutubeLiveId] = useState("");
-  const [conversationContinuityMode, setConversationContinuityMode] = useState(false);
+  const [conversationContinuityMode, setConversationContinuityMode] = useState(true);
   const [koeiroParam, setKoeiroParam] = useState<KoeiroParam>(DEFAULT_PARAM);
   const [chatProcessing, setChatProcessing] = useState(false);
   const [chatLog, setChatLog] = useState<Message[]>([]);
@@ -80,6 +81,8 @@ export default function Home() {
   const [characterName, setCharacterName] = useState("美穂");
   const [showCharacterName, setShowCharacterName] = useState(true);
   const [selectType, setSelectType] = useState("main");
+  const [lastInteractionTime, setLastInteractionTime] = useState(Date.now());
+  const [autoResponseInterval, setAutoResponseInterval] = useState<NodeJS.Timeout | null>(null);
 
   const incrementChatProcessingCount = () => {
     setChatProcessingCount(prevCount => prevCount + 1);
@@ -118,7 +121,7 @@ export default function Home() {
       setYoutubeMode(params.youtubeMode || false);
       setYoutubeApiKey(params.youtubeApiKey || "");
       setYoutubeLiveId(params.youtubeLiveId || "");
-      setConversationContinuityMode(params.conversationContinuityMode || false);
+      setConversationContinuityMode(params.conversationContinuityMode !== undefined ? params.conversationContinuityMode : true);
       changeWebSocketMode(params.webSocketMode || false);
       setStylebertvits2ServerURL(params.stylebertvits2ServerUrl || "http://127.0.0.1:5000");
       setStylebertvits2ModelId(params.stylebertvits2ModelId || "0")
@@ -482,12 +485,16 @@ export default function Home() {
    * アシスタントとの会話を行う
    */
   const handleSendChat = useCallback(
-    async (text: string, role?: string) => {
+    async (text: string, role: string = "user") => {
       const newMessage = text;
 
       if (newMessage == null) {
         return;
       }
+      // ユーザーの入力時にlastInteractionTimeを更新
+      console.log("handleSendChat called. Role:", role, "Text:", text);
+      setLastInteractionTime(Date.now());
+      console.log("Last interaction time updated:", Date.now());
 
       if (webSocketMode) {
         // 未メンテなので不具合がある可能性あり
@@ -594,9 +601,33 @@ export default function Home() {
   
         setChatProcessing(false);
       }
+      setLastInteractionTime(Date.now());
     },
     [webSocketMode, koeiroParam, handleSpeakAi, codeLog, t, selectAIService, openAiKey, anthropicKey, googleKey, groqKey, difyKey, chatLog, systemPrompt, processAIResponse, userId, startDate]
   );
+  useEffect(() => {
+    const checkForAutoResponse = async () => {
+      const currentTime = Date.now();
+      if (lastInteractionTime !== null) {
+        console.log("Checking for auto response. Time since last interaction:", currentTime - lastInteractionTime);
+        if (currentTime - lastInteractionTime > 120000 && !chatProcessing) {
+          console.log("Generating auto response...");
+          const continuationMessage = await getMessagesForContinuation(systemPrompt, chatLog, characterName, selectType);
+          console.log("Auto response generated:", continuationMessage[1].content);
+          handleSendChat(continuationMessage[1].content, "assistant");
+        }
+      }
+    };
+
+    const intervalId = setInterval(checkForAutoResponse, 120000);
+    setAutoResponseInterval(intervalId);
+
+    return () => {
+      if (autoResponseInterval) {
+        clearInterval(autoResponseInterval);
+      }
+    };
+  }, [lastInteractionTime, chatProcessing, systemPrompt, chatLog, handleSendChat, setAutoResponseInterval, selectType, characterName]);
 
   ///取得したコメントをストックするリストの作成（tmpMessages）
   interface tmpMessage {
@@ -605,7 +636,6 @@ export default function Home() {
     emotion: string;
   }
   const [tmpMessages, setTmpMessages] = useState<tmpMessage[]>([]);
-
   // ユーザーがログインしたらファーストコメントを出力
 const handleIntroductionClosed = useCallback(() => {
     const auth = getAuth();
@@ -632,7 +662,7 @@ const handleIntroductionClosed = useCallback(() => {
             break;
         }
         setSystemPrompt(prompt);
-
+        setConversationContinuityMode(true);
         if (previousRoute === "/login") {
           handleSendChat(`あなたは${characterName}という名前の${selectType === "male" ? "男性" : selectType === "dog" ? "犬" : "女性"}パートナーです。おかえり、また来てくれてありがとう！から始まる文章を出力して、あなたから会話を開始してください。`, "assistant");
         } else if (previousRoute === "/signup") {
@@ -727,7 +757,9 @@ const handleIntroductionClosed = useCallback(() => {
       setYoutubeSleepMode,
       conversationContinuityMode,
       handleSendChat,
-      preProcessAIResponse
+      preProcessAIResponse,
+      characterName,
+      selectType,
     );
   }, [openAiKey, youtubeLiveId, youtubeApiKey, chatProcessing, chatProcessingCount, systemPrompt, chatLog, selectAIService, anthropicKey, selectAIModel, youtubeNextPageToken, youtubeNoCommentCount, youtubeContinuationCount, youtubeSleepMode, conversationContinuityMode, handleSendChat, preProcessAIResponse]);
 
