@@ -269,8 +269,7 @@ B: 見てみたいな。送ってくれない？
  * @returns {Promise<Message[]>} - メッセージの配列
  */
 
-export const getMessagesForContinuation = async (systemPrompt: string, messages: Message[], characterName: string, selectType: string): Promise<Message[]> => {
-  const latestMessages = getLatestMessages(messages, 10);
+export const getMessagesForContinuation = async (systemPrompt: string, latestMessages: Message[], characterName: string, selectType: string): Promise<Message[]> => {
   const lastTenMessages = latestMessages.map(message => `${message.role}: ${message.content}`).join("\n");
   const userMessage = `- あなたは${characterName}という名前の${selectType === "male" ? "男性" : selectType === "dog" ? "犬" : "女性"}パートナーです。下記の会話履歴を参考に、自然な流れで会話を続けてください。
 - 直前の内容を単に繰り返すのではなく、会話を発展させるような返答を心がけてください。

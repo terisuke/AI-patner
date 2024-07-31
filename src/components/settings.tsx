@@ -980,7 +980,9 @@ export const Settings = ({
           <div className="my-8">{t('ConversationContinuityModeInfo3')}</div>
           {conversationContinuityMode ? (
             <TextButton
-              onClick={() => onChangeConversationContinuityMode(false)}
+              onClick={() =>{
+                console.log("Changing Conversation Continuity Mode to:", !conversationContinuityMode);
+              onChangeConversationContinuityMode(!conversationContinuityMode)}}
               disabled={selectAIService !== "openai" && selectAIService !== "anthropic"}>
               {t('StatusOn')}
             </TextButton>

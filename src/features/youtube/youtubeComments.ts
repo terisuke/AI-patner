@@ -72,27 +72,7 @@ const retrieveLiveComments = async (
 }
 
 export const fetchAndProcessComments = async (
-  systemPrompt: string,
-  messages: Message[],
-  aiApiKey: string,
-  selectAIService: string,
-  selectAIModel: string,
-  liveId: string,
-  youtubeKey: string,
-  youtubeNextPageToken: string,
-  setYoutubeNextPageToken: (token: string) => void,
-  youtubeNoCommentCount: number,
-  setYoutubeNoCommentCount: (count: number) => void,
-  youtubeContinuationCount: number,
-  setYoutubeContinuationCount: (count: number) => void,
-  youtubeSleepMode: boolean,
-  setYoutubeSleepMode: (mode: boolean) => void,
-  conversationContinuityMode: boolean,
-  handleSendChat: (text: string, role?: string) => void,
-  preProcessAIResponse: (messages: Message[]) => void,
-  characterName: string,
-  selectType: string
-): Promise<void> => {
+systemPrompt: string, messages: Message[], aiApiKey: string, selectAIService: string, selectAIModel: string, liveId: string, youtubeKey: string, youtubeNextPageToken: string, setYoutubeNextPageToken: (token: string) => void, youtubeNoCommentCount: number, setYoutubeNoCommentCount: (count: number) => void, youtubeContinuationCount: number, setYoutubeContinuationCount: (count: number) => void, youtubeSleepMode: boolean, setYoutubeSleepMode: (mode: boolean) => void, conversationContinuityMode: boolean, handleSendChat: (text: string, role?: string) => void, preProcessAIResponse: (messages: Message[]) => void, characterName: string, selectType: string, addGeneratedMessageToChatLog: (generatedMessage: Message) => void): Promise<void> => {
   try {
     const liveChatId = await getLiveChatId(liveId, youtubeKey);
 
@@ -136,7 +116,10 @@ export const fetchAndProcessComments = async (
         if (conversationContinuityMode) {
           if (noCommentCount < 3 || 3 < noCommentCount && noCommentCount < 6) {
             // 会話の続きを生成
-            const continuationMessage = await getMessagesForContinuation(systemPrompt, messages, characterName, selectType);
+            const latestMessages = messages.slice(-10);
+            const continuationMessage = await getMessagesForContinuation(systemPrompt, latestMessages, characterName, selectType);
+            const generatedMessage = continuationMessage[continuationMessage.length - 1];
+            handleSendChat(generatedMessage.content, "assistant");
             preProcessAIResponse(continuationMessage);
           } else if (noCommentCount === 3) {
             // 新しいトピックを生成

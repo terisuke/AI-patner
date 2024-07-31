@@ -55,7 +55,8 @@ export default function Home() {
   const [youtubeMode, setYoutubeMode] = useState(false);
   const [youtubeApiKey, setYoutubeApiKey] = useState("");
   const [youtubeLiveId, setYoutubeLiveId] = useState("");
-  const [conversationContinuityMode, setConversationContinuityMode] = useState(true);
+  const [conversationContinuityMode, setConversationContinuityMode] = useState(false);
+  console.log("Conversation Continuity Mode changed:", conversationContinuityMode);
   const [koeiroParam, setKoeiroParam] = useState<KoeiroParam>(DEFAULT_PARAM);
   const [chatProcessing, setChatProcessing] = useState(false);
   const [chatLog, setChatLog] = useState<Message[]>([]);
@@ -94,6 +95,15 @@ export default function Home() {
     setChatProcessingCount(prevCount => prevCount - 1);
   }
 
+  const addGeneratedMessageToChatLog = useCallback((generatedMessage: Message) => {
+    setChatLog(prevChatLog => {
+      const newChatLog = [...prevChatLog, generatedMessage];
+      if (newChatLog.length > 10) {
+        return newChatLog.slice(-10);
+      }
+      return newChatLog;
+    });
+  }, []);
   useEffect(() => {
     const storedData = window.localStorage.getItem("chatVRMParams");
     if (storedData) {
@@ -123,7 +133,8 @@ export default function Home() {
       setYoutubeMode(params.youtubeMode || false);
       setYoutubeApiKey(params.youtubeApiKey || "");
       setYoutubeLiveId(params.youtubeLiveId || "");
-      setConversationContinuityMode(params.conversationContinuityMode !== undefined ? params.conversationContinuityMode : true);
+      setConversationContinuityMode(params.conversationContinuityMode !== undefined ? params.conversationContinuityMode : false);
+      console.log("Initial conversationContinuityMode:", params.conversationContinuityMode !== undefined ? params.conversationContinuityMode : false);
       changeWebSocketMode(params.webSocketMode || false);
       setStylebertvits2ServerURL(params.stylebertvits2ServerUrl || "http://127.0.0.1:5000");
       setStylebertvits2ModelId(params.stylebertvits2ModelId || "0")
@@ -623,7 +634,7 @@ export default function Home() {
   useEffect(() => {
     const checkForAutoResponse = async () => {
       const currentTime = Date.now();
-      if (lastInteractionTime !== null) {
+      if (lastInteractionTime !== null && conversationContinuityMode) {
         console.log("Checking for auto response. Time since last interaction:", currentTime - lastInteractionTime);
         if (currentTime - lastInteractionTime > 120000 && !chatProcessing) {
           console.log("Generating auto response...");
@@ -642,7 +653,7 @@ export default function Home() {
         clearInterval(autoResponseInterval);
       }
     };
-  }, [lastInteractionTime, chatProcessing, systemPrompt, chatLog, handleSendChat, setAutoResponseInterval, selectType, characterName, userId, startDate, openAiKey, anthropicKey, googleKey, groqKey, difyKey, processAIResponse, koeiroParam, t]);
+  }, [lastInteractionTime, chatProcessing, systemPrompt, chatLog, handleSendChat, setAutoResponseInterval, selectType, characterName, userId, startDate, openAiKey, anthropicKey, googleKey, groqKey, difyKey, processAIResponse, koeiroParam, t, conversationContinuityMode]);
 
   ///取得したコメントをストックするリストの作成（tmpMessages）
   interface tmpMessage {
@@ -677,7 +688,7 @@ const handleIntroductionClosed = useCallback(() => {
             break;
         }
         setSystemPrompt(prompt);
-        setConversationContinuityMode(true);
+        setConversationContinuityMode(false);
         if (previousRoute === "/login") {
           handleSendChat(`あなたは${characterName}という名前の${selectType === "male" ? "男性" : selectType === "dog" ? "犬" : "女性"}パートナーです。おかえり、また来てくれてありがとう！から始まる文章を出力して、あなたから会話を開始してください。`, "assistant");
         } else if (previousRoute === "/signup") {
@@ -748,42 +759,42 @@ const handleIntroductionClosed = useCallback(() => {
 
   // YouTubeコメントを取得する処理
   const fetchAndProcessCommentsCallback = useCallback(async() => {
-    if (!openAiKey || !youtubeLiveId || !youtubeApiKey || chatProcessing || chatProcessingCount > 0) {
-      return;
-    }
-    await new Promise(resolve => setTimeout(resolve, INTERVAL_MILL_SECONDS_RETRIEVING_COMMENTS));
-    console.log("Call fetchAndProcessComments !!!");
-
-    fetchAndProcessComments(
-      systemPrompt,
-      chatLog,
-      selectAIService === "anthropic" ? anthropicKey : openAiKey,
-      selectAIService,
-      selectAIModel,
-      youtubeLiveId,
-      youtubeApiKey,
-      youtubeNextPageToken,
-      setYoutubeNextPageToken,
-      youtubeNoCommentCount,
-      setYoutubeNoCommentCount,
-      youtubeContinuationCount,
-      setYoutubeContinuationCount,
-      youtubeSleepMode,
-      setYoutubeSleepMode,
-      conversationContinuityMode,
-      handleSendChat,
-      preProcessAIResponse,
-      characterName,
-      selectType,
-    );
-  }, [openAiKey, youtubeLiveId, youtubeApiKey, chatProcessing, chatProcessingCount, systemPrompt, chatLog, selectAIService, anthropicKey, selectAIModel, youtubeNextPageToken, youtubeNoCommentCount, youtubeContinuationCount, youtubeSleepMode, conversationContinuityMode, handleSendChat, preProcessAIResponse]);
-
+  if (!openAiKey || !youtubeLiveId || !youtubeApiKey || chatProcessing || chatProcessingCount > 0) {
+    return;
+  }
+  await new Promise(resolve => setTimeout(resolve, INTERVAL_MILL_SECONDS_RETRIEVING_COMMENTS));
+  console.log("Call fetchAndProcessComments !!!");
+  fetchAndProcessComments(
+    systemPrompt,
+    chatLog,
+    selectAIService === "anthropic" ? anthropicKey : openAiKey,
+    selectAIService,
+    selectAIModel,
+    youtubeLiveId,
+    youtubeApiKey,
+    youtubeNextPageToken,
+    setYoutubeNextPageToken,
+    youtubeNoCommentCount,
+    setYoutubeNoCommentCount,
+    youtubeContinuationCount,
+    setYoutubeContinuationCount,
+    youtubeSleepMode,
+    setYoutubeSleepMode,
+    conversationContinuityMode,
+    handleSendChat,
+    preProcessAIResponse,
+    characterName,
+    selectType,
+    addGeneratedMessageToChatLog
+  );
+}, [openAiKey, youtubeLiveId, youtubeApiKey, chatProcessing, chatProcessingCount, systemPrompt, chatLog, selectAIService, anthropicKey, selectAIModel, youtubeNextPageToken, youtubeNoCommentCount, youtubeContinuationCount, youtubeSleepMode, conversationContinuityMode, handleSendChat, preProcessAIResponse, characterName, selectType, addGeneratedMessageToChatLog]);
   useEffect(() => {
     console.log("chatProcessingCount:", chatProcessingCount);
     fetchAndProcessCommentsCallback();
   }, [chatProcessingCount, youtubeLiveId, youtubeApiKey, conversationContinuityMode,
     fetchAndProcessCommentsCallback
   ]);
+  console.log("Current conversationContinuityMode:", conversationContinuityMode);
 
   useEffect(() => {
     if (youtubeNoCommentCount < 1) return;
