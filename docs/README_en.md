@@ -69,7 +69,9 @@ npm run dev
    - For Google TTS, languages other than Japanese can also be selected. Credential information is required.
    - For Style-Bert-VITS2, a local API server needs to be running.
    - For GSVI TTS, a local API server needs to be running.
-5. Start conversing with the character from the input form. Microphone input is also possible.
+   - ElevenLabs supports various language selection. Please enter the API key.
+5. Start conversing with the character from the input form.
+ Microphone input is also possible.
 
 ## AITuber Streaming
 

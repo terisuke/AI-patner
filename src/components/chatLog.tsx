@@ -43,18 +43,23 @@ const Chat = ({ role, message, characterName }: { role: string; message: string;
   const roleText = role !== "user" ? "text-secondary" : "text-primary";
   const offsetX = role === "user" ? "pl-40" : "pr-40";
 
+  // 感情タグを抽出
+  const match = message.match(/^\[(neutral|happy|angry|sad|relaxed)\]/);
+  const emotion = match ? match[1] : "neutral";
+  const cleanMessage = message.replace(/^\[(neutral|happy|angry|sad|relaxed)\]/, "").trim();
+
   return (
     <div className={`mx-auto max-w-[32rem] my-16 ${offsetX}`}>
       {role === "code" ? (
         <pre className="whitespace-pre-wrap break-words bg-[#1F2937] text-white p-16 rounded-8">
-          <code className="font-mono text-sm">{message}</code>
+          <code className="font-mono text-sm">{cleanMessage}</code>
         </pre>
       ) : (
         <>
         <div
           className={`px-24 py-8 rounded-t-8 font-bold tracking-wider ${roleColor}`}
         >
-          {role !== "user" ? (characterName || "美穂") : "YOU"}
+          {role !== "user" ? `${characterName} (${emotion})`  : "YOU"}
         </div>
         <div className="px-24 py-16 bg-white rounded-b-8">
             <div className={`typography-16 font-bold ${roleText}`}>{message}</div>

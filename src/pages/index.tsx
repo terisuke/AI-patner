@@ -43,8 +43,8 @@ export default function Home() {
   const [difyUrl, setDifyUrl] = useState("");
   const [difyConversationId, setDifyConversationId] = useState("");
   const [selectVoice, setSelectVoice] = useState("voicevox");
-  const [selectLanguage, setSelectLanguage] = useState("JP");
-  const [selectVoiceLanguage, setSelectVoiceLanguage] = useState("ja-JP");
+  const [selectLanguage, setSelectLanguage] = useState("JP"); // TODO: 要整理, JP, EN
+  const [selectVoiceLanguage, setSelectVoiceLanguage] = useState("ja-JP"); // TODO: 要整理, ja-JP, en-US
   const [changeEnglishToJapanese, setChangeEnglishToJapanese] = useState(false);
   const [koeiromapKey, setKoeiromapKey] = useState("");
   const [voicevoxSpeaker, setVoicevoxSpeaker] = useState("2");
@@ -73,6 +73,8 @@ export default function Home() {
   const [gsviTtsModelId, setGSVITTSModelID] = useState("");
   const [gsviTtsBatchSize, setGSVITTSBatchSize] = useState(2);
   const [gsviTtsSpeechRate, setGSVITTSSpeechRate] = useState(1.0);
+  const [elevenlabsApiKey, setElevenlabsApiKey] = useState("");
+  const [elevenlabsVoiceId, setElevenlabsVoiceId] = useState("");
   const [youtubeNextPageToken, setYoutubeNextPageToken] = useState("");
   const [youtubeContinuationCount, setYoutubeContinuationCount] = useState(0);
   const [youtubeNoCommentCount, setYoutubeNoCommentCount] = useState(0);
@@ -131,6 +133,8 @@ export default function Home() {
       setGSVITTSModelID(params.gsviTtsModelId || "");
       setGSVITTSBatchSize(params.gsviTtsBatchSize || 2);
       setGSVITTSSpeechRate(params.gsviTtsSpeechRate || 1.0);
+      setElevenlabsApiKey(params.elevenlabsApiKey || "");
+      setElevenlabsVoiceId(params.elevenlabsVoiceId || "");
       setCharacterName(params.characterName || "美穂");
       setShowCharacterName(params.showCharacterName || true);
     }
@@ -222,6 +226,8 @@ export default function Home() {
     gsviTtsModelId,
     gsviTtsBatchSize,
     gsviTtsSpeechRate,
+    elevenlabsApiKey,
+    elevenlabsVoiceId,
     characterName,
     showCharacterName,
     selectType
@@ -312,6 +318,8 @@ export default function Home() {
         gsviTtsModelId,
         gsviTtsBatchSize,
         gsviTtsSpeechRate,
+        elevenlabsApiKey,
+        elevenlabsVoiceId,
         changeEnglishToJapanese,
         onStart,
         onEnd
@@ -331,6 +339,8 @@ export default function Home() {
       gsviTtsModelId,
       gsviTtsBatchSize,
       gsviTtsSpeechRate,
+      elevenlabsApiKey,
+      elevenlabsVoiceId,
       changeEnglishToJapanese
     ]
   );
@@ -397,6 +407,10 @@ export default function Home() {
         const sentenceMatch = receivedMessage.match(/^(.+?[。．.!?！？\n]|.{20,}[、,])/);
         if (sentenceMatch?.[0]) {
           let sentence = sentenceMatch[0];
+          // 感情タグがない場合、デフォルトのタグを追加
+          if (!sentence.match(/^\[(neutral|happy|angry|sad|relaxed)\]/)) {
+            sentence = "[neutral]" + sentence;
+          }
           // 区切った文字をsentencesに追加
           sentences.push(sentence);
           // 区切った文字の残りでreceivedMessageを更新
@@ -505,21 +519,22 @@ export default function Home() {
           // WebSocketからの返答を処理
 
           if (role == "assistant") {
-            let aiText = `${"[neutral]"} ${newMessage}`;
+            let aiText = newMessage;
+            // デフォルトの感情タグを追加
+            aiText = aiText.replace(/^\[(neutral|happy|angry|sad|relaxed)\]/, "").trim();
             try {
               const aiTalks = textsToScreenplay([aiText], koeiroParam);
-
               // 文ごとに音声を生成 & 再生、返答を表示
               handleSpeakAi(aiTalks[0], async () => {
                 // アシスタントの返答をログに追加
                 const updateLog: Message[] = [
                   ...codeLog,
-                  { role: "assistant", content: newMessage },
+                  { role: "assistant", content: aiText },
                 ];
                 setChatLog(updateLog);
                 setCodeLog(updateLog);
 
-                setAssistantMessage(newMessage);
+                setAssistantMessage(aiText);
                 setIsVoicePlaying(false);
                 setChatProcessing(false);
               });
@@ -627,7 +642,7 @@ export default function Home() {
         clearInterval(autoResponseInterval);
       }
     };
-  }, [lastInteractionTime, chatProcessing, systemPrompt, chatLog, handleSendChat, setAutoResponseInterval, selectType, characterName]);
+  }, [lastInteractionTime, chatProcessing, systemPrompt, chatLog, handleSendChat, setAutoResponseInterval, selectType, characterName, userId, startDate, openAiKey, anthropicKey, googleKey, groqKey, difyKey, processAIResponse, koeiroParam, t]);
 
   ///取得したコメントをストックするリストの作成（tmpMessages）
   interface tmpMessage {
@@ -884,6 +899,10 @@ const handleIntroductionClosed = useCallback(() => {
           onChangeGVITtsBatchSize={setGSVITTSBatchSize}
           gsviTtsSpeechRate={gsviTtsSpeechRate}
           onChangeGSVITtsSpeechRate={setGSVITTSSpeechRate}
+          elevenlabsApiKey={elevenlabsApiKey}
+          onChangeElevenlabsApiKey={setElevenlabsApiKey}
+          elevenlabsVoiceId={elevenlabsVoiceId}
+          onChangeElevenlabsVoiceId={setElevenlabsVoiceId}
           showCharacterName={showCharacterName}
           setSystemPrompt={setSystemPrompt}
           onChangeShowCharacterName={setShowCharacterName}

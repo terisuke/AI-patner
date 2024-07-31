@@ -1,0 +1,44 @@
+[debug] [2024-07-31T04:06:36.637Z] ----------------------------------------------------------------------
+[debug] [2024-07-31T04:06:36.638Z] Command:       /Users/teradakousuke/.nvm/versions/node/v20.15.0/bin/node /Users/teradakousuke/.nvm/versions/node/v20.15.0/bin/firebase deploy
+[debug] [2024-07-31T04:06:36.639Z] CLI Version:   13.14.2
+[debug] [2024-07-31T04:06:36.639Z] Platform:      darwin
+[debug] [2024-07-31T04:06:36.639Z] Node Version:  v20.15.0
+[debug] [2024-07-31T04:06:36.639Z] Time:          Wed Jul 31 2024 13:06:36 GMT+0900 (日本標準時)
+[debug] [2024-07-31T04:06:36.639Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2024-07-31T04:06:36.677Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2024-07-31T04:06:36.678Z] > authorizing via signed-in user (company@cor-jp.com)
+[debug] [2024-07-31T04:06:36.678Z] [iam] checking project aipartner-426616 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2024-07-31T04:06:36.679Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/aipartner-426616:testIamPermissions [none]
+[debug] [2024-07-31T04:06:36.679Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/aipartner-426616:testIamPermissions x-goog-quota-user=projects/aipartner-426616
+[debug] [2024-07-31T04:06:36.679Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/aipartner-426616:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-07-31T04:06:37.742Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/aipartner-426616:testIamPermissions 200
+[debug] [2024-07-31T04:06:37.743Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/aipartner-426616:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2024-07-31T04:06:37.743Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/aipartner-426616/serviceAccounts/aipartner-426616@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2024-07-31T04:06:37.743Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/aipartner-426616/serviceAccounts/aipartner-426616@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2024-07-31T04:06:39.211Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/aipartner-426616/serviceAccounts/aipartner-426616@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2024-07-31T04:06:39.212Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/aipartner-426616/serviceAccounts/aipartner-426616@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2024-07-31T04:06:39.212Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/aipartner-426616 [none]
+[debug] [2024-07-31T04:06:39.792Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/aipartner-426616 200
+[debug] [2024-07-31T04:06:39.792Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/aipartner-426616 {"projectId":"aipartner-426616","projectNumber":"639959525777","displayName":"AIPartner","name":"projects/aipartner-426616","resources":{"hostingSite":"aipartner-426616","realtimeDatabaseInstance":"aipartner-426616-default-rtdb"},"state":"ACTIVE","etag":"1_b867b047-b643-420c-9120-11cbc576359f"}
+[info] 
+[info] === Deploying to 'aipartner-426616'...
+[info] 
+[info] i  deploying functions, hosting 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build
+[info] ✔  functions: Finished running predeploy script. 
+[debug] [2024-07-31T04:06:43.732Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/aipartner-426616 [none]
+[debug] [2024-07-31T04:06:44.066Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/aipartner-426616 200
+[debug] [2024-07-31T04:06:44.066Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/aipartner-426616 {"projectId":"aipartner-426616","projectNumber":"639959525777","displayName":"AIPartner","name":"projects/aipartner-426616","resources":{"hostingSite":"aipartner-426616","realtimeDatabaseInstance":"aipartner-426616-default-rtdb"},"state":"ACTIVE","etag":"1_b867b047-b643-420c-9120-11cbc576359f"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2024-07-31T04:06:44.069Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/aipartner-426616/services/cloudfunctions.googleapis.com [none]
+[debug] [2024-07-31T04:06:44.069Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/aipartner-426616/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/aipartner-426616
+[debug] [2024-07-31T04:06:44.071Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/aipartner-426616/services/runtimeconfig.googleapis.com [none]
+[debug] [2024-07-31T04:06:44.071Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/aipartner-426616/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/aipartner-426616
+[debug] [2024-07-31T04:06:44.072Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/aipartner-426616/services/cloudbuild.googleapis.com [none]
+[debug] [2024-07-31T04:06:44.072Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/aipartner-426616/services/cloudbuild.googleapis.com x-goog-quota-user=projects/aipartner-426616
+[debug] [2024-07-31T04:06:44.073Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/aipartner-426616/services/artifactregistry.googleapis.com [none]
+[debug] [2024-07-31T04:06:44.073Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/aipartner-426616/services/artifactregistry.googleapis.com x-goog-quota-user=projects/aipartner-426616
