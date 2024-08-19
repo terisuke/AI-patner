@@ -111,7 +111,7 @@ export const useMessageProcessing = (dependencies: MessageProcessingDependencies
           receivedMessage = receivedMessage.slice(tag.length);
         }
 
-        const sentenceMatch = receivedMessage.match(/^(.+?[。．.!?！？\n]|.{20,}[、,])/);
+        const sentenceMatch = receivedMessage.match(/^(.+?[。．.!?！？\n]\s*|.{20,}[、,])/);;
         if (sentenceMatch?.[0]) {
           let sentence = sentenceMatch[0];
           if (!sentence.match(/^\[(neutral|happy|angry|sad|relaxed)\]/)) {

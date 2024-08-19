@@ -413,9 +413,8 @@ export default function Home() {
           tag = tagMatch[0];
           receivedMessage = receivedMessage.slice(tag.length);
         }
-
         // 返答を一文単位で切り出して処理する
-        const sentenceMatch = receivedMessage.match(/^(.+?[。．.!?！？\n]|.{20,}[、,])/);
+        const sentenceMatch = receivedMessage.match(/^(.+?[。．.!?！？\n]\s*|.{20,}[、,])/);;
         if (sentenceMatch?.[0]) {
           let sentence = sentenceMatch[0];
           // 感情タグがない場合、デフォルトのタグを追加
